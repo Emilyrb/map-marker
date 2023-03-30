@@ -1,5 +1,6 @@
 import './App.css';
-import { AddMarkerButton } from './Components';
+import { AddMarkerButton, MapComponent } from './Components';
+import { Container, Navbar } from 'react-bootstrap';
 
 function App() {
   return (
@@ -10,9 +11,15 @@ function App() {
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous"
       />
-      <header className="App-header">
-        <AddMarkerButton />
-      </header>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand href="#home">Map Marker</Navbar.Brand>
+          <Navbar.Text>
+            <AddMarkerButton />
+          </Navbar.Text>
+        </Container>
+      </Navbar>
+      <MapComponent />
     </div>
   );
 }
