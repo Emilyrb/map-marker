@@ -1,7 +1,8 @@
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, ButtonGroup, Col, Container, Dropdown, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
+import { StarRating } from './StarRating';
 
 const StyledContainer = styled(Container)`
   margin: 0 auto;
@@ -20,7 +21,12 @@ const StyledRow = styled(Row)`
   text-align: center;
   align-items: center;
   justify-content: center;
-  padding-bottom: 10px;
+  padding: 5px 0;
+`;
+
+const StyledCheckbox = styled(Form.Check)`
+  transform: scale(1.5);
+  height: 30px;
 `;
 
 const CloseFormButton = styled.div`
@@ -52,71 +58,79 @@ export function AddMarkerForm(props: Props) {
             </Col>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.Name'>
-                <Form.Label>Name</Form.Label>
-                <Form.Control type='text' placeholder='Emily' />
+            <Form.Group as={Col} controlId='form.Name'>
+              <Form.Label>Name</Form.Label>
+              <Form.Control type='text' placeholder='Emily' />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.Date'>
-                <Form.Label>Date</Form.Label>
-                <Form.Control type='text' placeholder='' />
+            <Form.Group as={Col} controlId='form.Date'>
+              <Form.Label>Date</Form.Label>
+              <Form.Control type='date' />
+            </Form.Group>
+            <Form.Group as={Col} controlId='form.Time'>
+              <Form.Label>Time</Form.Label>
+              <Form.Control type='time' />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.Location'>
+            <Form.Group as={Col} controlId='form.Location'>
                 <Form.Label>Location</Form.Label>
                 <Form.Control type='text' placeholder='Kuraby' />
             </Form.Group>
-            <Form.Group controlId='form.Address'>
+            <Form.Group as={Col} controlId='form.Address'>
                 <Form.Label>Address</Form.Label>
                 <Form.Control type='text' placeholder='1300A Beenleigh Rd, Kuraby QLD 4112' />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.BeginnerFriendly'>
+            <Form.Group as={Col} controlId='form.BeginnerFriendly'>
               <Form.Label>Beginner Friendly</Form.Label>
-              <Form.Control type='text' placeholder='' />
+              <StarRating value={0} />
             </Form.Group>
-            <Form.Group controlId='form.AdvancedFriendly'>
+            <Form.Group as={Col} controlId='form.AdvancedFriendly'>
               <Form.Label>Advanced Friendly</Form.Label>
-              <Form.Control type='text' placeholder='' />
+              <StarRating value={0} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.Safety'>
+            <Form.Group as={Col} controlId='form.Safety'>
               <Form.Label>Safety</Form.Label>
-              <Form.Control type='text' placeholder='' />
+              <StarRating value={0} />
             </Form.Group>
-            <Form.Group controlId='form.Busy'>
+            <Form.Group as={Col}controlId='form.Busy'>
               <Form.Label>Busy</Form.Label>
-              <Form.Control type='text' placeholder='' />
+              <StarRating value={0} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.Ramps'>
+            <Form.Group as={Col} controlId='form.Ramps'>
               <Form.Label>Ramps</Form.Label>
               <Form.Control type='text' placeholder='2' />
             </Form.Group>
-            <Form.Group controlId='form.DropIns'>
+            <Form.Group as={Col} controlId='form.DropIns'>
               <Form.Label>DropIns</Form.Label>
               <Form.Control type='text' placeholder='3' />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.PumpTrack'>
+            <Form.Group as={Col} controlId='form.PumpTrack'>
               <Form.Label>Pump Track</Form.Label>
-              <Form.Check type="checkbox" />
+              <div>
+                <StyledCheckbox type="checkbox" id="form.PumpTrack" />
+              </div>
             </Form.Group>
-            <Form.Group controlId='form.Bowl'>
+            <Form.Group as={Col} controlId='form.Bowl'>
               <Form.Label>Bowl</Form.Label>
-              <Form.Check type="checkbox" />
+              <div>
+                <StyledCheckbox type="checkbox" id="form.Bowl" />
+              </div>
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group controlId='form.OverallRating'>
+            <Form.Group as={Col} controlId='form.OverallRating'>
               <Form.Label>Overall Rating</Form.Label>
-              <Form.Control type='text' placeholder='' />
+              <StarRating value={0} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
