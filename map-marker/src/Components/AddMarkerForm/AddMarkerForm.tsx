@@ -5,15 +5,22 @@ import styled from 'styled-components';
 import { StarRating } from './StarRating';
 
 const StyledContainer = styled(Container)`
-  margin: 0 auto;
   padding: 0;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 10000;
 `;
 
 const StyledForm = styled(Form)`
   width: 100%;
   border-radius: 10px; 
-  background-color: rgba(255,255,255,0.7);
+  background-color: rgba(255,255,255,0.8);
   padding: 0;
+  color: black;
 `;
 
 const StyledRow = styled(Row)`
@@ -30,12 +37,12 @@ const StyledCheckbox = styled(Form.Check)`
 `;
 
 const CloseFormButton = styled.div`
-  color: rgba(0,0,0,0.15);
+  color: rgba(0,0,0,0.25);
   width: 40px;
   height: 40px;
   cursor: pointer;
   &:hover {
-    color: rgba(0,0,0,0.3);
+    color: rgba(0,0,0,0.4);
   }
 `;
 
@@ -53,7 +60,7 @@ export function AddMarkerForm(props: Props) {
             <Col><h1>Add Skate Park Marker</h1></Col>
             <Col xs={1}>
               <CloseFormButton onClick={() => {setShowForm(false)}}>
-                <FontAwesomeIcon icon={faCircleXmark} />
+                <FontAwesomeIcon icon={faCircleXmark} size='2xl' />
               </CloseFormButton>
             </Col>
           </StyledRow>
