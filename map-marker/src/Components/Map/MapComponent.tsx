@@ -1,11 +1,11 @@
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
-import * as React from "react";
+import { useState } from 'react';
+import { DraggableMarker } from './DraggableMarker';
 
-const L = require("leaflet");
+const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
-
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
     iconUrl: require('leaflet/dist/images/marker-icon.png'),
@@ -17,18 +17,44 @@ const StyledMapContainer = styled(MapContainer)`
   height: 400px;
 `;
 
-export function MapComponent() {
+interface loadLocationProps{
+  userLocation: {lat: number, lng: number};
+  setUserLocation: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
+}
+
+function LoadToUserLocation(props: loadLocationProps) {
+  const { userLocation, setUserLocation } = props;
+  const map = useMap();
+  if (userLocation.lat === 0 && userLocation.lng === 0){
+    map.locate().on('locationfound', function (e: any) {
+      setUserLocation(e.latlng);
+      map.flyTo(e.latlng, map.getZoom());
+      console.log('user is at ', e.latlng);
+    });
+
+  }
+  return null;
+}
+
+interface Props{
+  setMarkerPos: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
+};
+
+export function MapComponent(props: Props) {
+  const { setMarkerPos } = props;
+  const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
+
   return (
-    <StyledMapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+    <StyledMapContainer center={[-27.469, 153.024]} zoom={13} scrollWheelZoom={false}>
+      <LoadToUserLocation userLocation={userLocation} setUserLocation={setUserLocation}/>
+      {
+        userLocation.lat !== 0 && userLocation.lng !== 0 &&
+        <DraggableMarker userLocation={userLocation} setMarkerPos={setMarkerPos} />
+      }
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
     </StyledMapContainer>
   );
 }
