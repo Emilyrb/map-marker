@@ -1,8 +1,15 @@
 import './App.css';
-import { AddMarkerButton, MapComponent } from './Components';
+import { AddMarkerButton, MapComponent, SelectMapForm } from './Components';
 import { Container, Navbar } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [ showMap, setShowMap ] = useState(false);
+  const [ mapName, setMapName ] = useState('');
+
+  useEffect(() => {
+  }, [mapName]);
+  
   return (
     <div className="App">
       <link
@@ -19,7 +26,9 @@ function App() {
           </Navbar.Text>
         </Container>
       </Navbar>
-      <MapComponent />
+      {
+        showMap ? <MapComponent mapName={mapName}/> : <SelectMapForm setMapName={setMapName} setShowMap={setShowMap} />
+      }
     </div>
   );
 }
