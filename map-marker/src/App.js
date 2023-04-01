@@ -1,5 +1,5 @@
 import './App.css';
-import { AddMarkerButton, MapComponent, SelectMapForm } from './Components';
+import { AddMarkerButton, MapComponent, SelectMapForm, AddReviewForm } from './Components';
 import { Container, Navbar } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +7,7 @@ function App() {
   const [ showMap, setShowMap ] = useState(false);
   const [ mapName, setMapName ] = useState('');
   const [ markerPos, setMarkerPos ] = useState({lat: 0, lng: 0});
+  const [ showReviewForm, setShowReviewForm ] = useState(false);
 
   useEffect(() => {
   }, [mapName]);
@@ -30,7 +31,10 @@ function App() {
         </Container>
       </Navbar>
       {
-        showMap ? <MapComponent mapName={mapName} setMarkerPos={setMarkerPos} /> : <SelectMapForm setMapName={setMapName} setShowMap={setShowMap} />
+        showMap ? <MapComponent mapName={mapName} setMarkerPos={setMarkerPos} setShowReviewForm={setShowReviewForm} /> : <SelectMapForm setMapName={setMapName} setShowMap={setShowMap} />
+      }
+      {
+        showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} /> : null
       }
     </div>
   );
