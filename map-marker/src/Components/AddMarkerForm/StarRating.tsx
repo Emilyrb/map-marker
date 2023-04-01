@@ -36,7 +36,7 @@ export function StarRating(props: Props) {
           {
             index <= rating ?
               <FontAwesomeIcon style={{color: 'gold'}} icon={faStar} />
-              : <FontAwesomeIcon style={{color: 'white'}} icon={faStar} />
+              : <FontAwesomeIcon style={{color: 'gray'}} icon={faStar} />
           }
         </StyledButton>
       );
