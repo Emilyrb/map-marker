@@ -22,7 +22,9 @@ function App() {
         <Container>
           <Navbar.Brand href="#home">Map Marker</Navbar.Brand>
           <Navbar.Text>
-            <AddMarkerButton />
+            {
+              showMap ? <AddMarkerButton /> : null 
+            }
           </Navbar.Text>
         </Container>
       </Navbar>
