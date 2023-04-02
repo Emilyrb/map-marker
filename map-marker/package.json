@@ -10,6 +10,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.2.3",
+    "env-cmd": "^10.1.0",
+    "firebase": "^9.19.1",
     "leaflet": "^1.9.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
@@ -20,8 +22,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env react-scripts start",
+    "build": "env-cmd -f .env react-scripts build",
+    "deploy": "env-cmd -f .env react-scripts build && firebase deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
