@@ -1,9 +1,9 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { DraggableMarker } from './DraggableMarker';
-import { AddReviewButton } from '../AddReviewForm/AddReviewButton';
+import { Markers } from './Markers';
 
 const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
@@ -39,10 +39,11 @@ function LoadToUserLocation(props: loadLocationProps) {
 interface Props{
   setMarkerPos: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedMarker: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
 };
 
 export function MapComponent(props: Props) {
-  const { setMarkerPos, setShowReviewForm } = props;
+  const { setMarkerPos, setShowReviewForm, setSelectedMarker } = props;
   const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
 
   return (
@@ -53,13 +54,8 @@ export function MapComponent(props: Props) {
         <DraggableMarker userLocation={userLocation} setMarkerPos={setMarkerPos} />
       }
       {/* Loop through waypoints and add marker for each */}
-      <Marker position={[-27.469, 153.024]}>
-        <Popup>
-          'name of skate park here' has x reviews,
-          Add Review:
-          <AddReviewButton setShowForm={setShowReviewForm} />
-        </Popup>
-      </Marker>
+      <Markers pos={[-27.469, 153.024]} setShowReviewForm={setShowReviewForm} setSelectedMarker={setSelectedMarker} />
+      <Markers pos={[-27.469, 153.124]} setShowReviewForm={setShowReviewForm} setSelectedMarker={setSelectedMarker} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'

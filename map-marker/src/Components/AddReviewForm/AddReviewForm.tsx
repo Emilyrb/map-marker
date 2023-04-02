@@ -47,11 +47,11 @@ const CloseFormButton = styled.div`
 
 interface Props{
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  // pass marker position into here
+  markerToAddReview: {lat: number, lng: number};
 }
 
 export function AddReviewForm(props: Props) {
-  const { setShowForm } = props;
+  const { setShowForm, markerToAddReview } = props;
   const [ formData, setFormData ] = useState({
     'form.Name': '',
     'form.Date': '',
@@ -79,6 +79,7 @@ export function AddReviewForm(props: Props) {
   }
 
   function handleSubmit(e: any) {
+    console.log('marker pos is', markerToAddReview);
     e.preventDefault();
   };
 
