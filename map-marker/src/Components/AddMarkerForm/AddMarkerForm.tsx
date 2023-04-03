@@ -17,7 +17,7 @@ const StyledContainer = styled(Container)`
 
 const StyledForm = styled(Form)`
   width: 100%;
-  border-radius: 10px; 
+  border-radius: 10px;
   background-color: rgba(255,255,255,0.8);
   padding: 10px;
   color: black;
@@ -49,20 +49,40 @@ interface Props {
 export function AddMarkerForm(props: Props) {
     const { setShowForm, markerPos } = props;
     const [ formData, setFormData ] = useState({
-      'form.Location': '',
+      'form.Name': '',
       'form.Address': '',
       'form.Image': '',
+      'form.Latlng': {lat: 0, lng: 0},
+      'reviewIds': {},
+      'mapType': 'skate',
   })
 
   function handleChange(e: any) {
     const key = e.target.id;
     const value = e.target.value;
-    setFormData({...formData, [key]: value})
+    setFormData({...formData, [key]: value});
+    console.log('markerPos is', markerPos);
+    setFormData(prevState => ({
+      ...prevState,
+      'form.Latlng': {lat: markerPos['lat'], lng: markerPos['lng']},
+    }));
   }
 
   function handleSubmit(e: any) {
-    console.log('submit marker at', markerPos);
     e.preventDefault();
+
+    console.log('handling submit');
+    const ref = collection(firestore, 'Markers');
+    let data = {
+      data: formData
+    };
+    try {
+      console.log(data);
+      addDoc(ref, data);
+      // refetch the new data....
+    } catch(err) {
+      console.log(err);
+    }
 }
 
     return (
@@ -77,8 +97,8 @@ export function AddMarkerForm(props: Props) {
             </Col>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.Location'>
-                <Form.Label>Location</Form.Label>
+            <Form.Group as={Col} controlId='form.Name'>
+                <Form.Label>Name</Form.Label>
                 <Form.Control type='text' placeholder='Kuraby' onChange={handleChange} />
             </Form.Group>
             <Form.Group as={Col} controlId='form.Address'>

@@ -1,9 +1,12 @@
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DraggableMarker } from './DraggableMarker';
+import { getDocs, collection } from '@firebase/firestore';
+import { firestore } from '../../firebase_setup/firebase';
 import { Markers } from './Markers';
+import { MarkersDTO } from '../../Types';
 
 const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
@@ -42,9 +45,41 @@ interface Props{
   setSelectedMarker: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
 };
 
+const initData: MarkersDTO[] = [];
+
 export function MapComponent(props: Props) {
   const { setMarkerPos, setShowReviewForm, setSelectedMarker } = props;
   const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
+  const [ data, setData ] = useState(initData);
+
+  const fetchMarkers = async () => {
+    await getDocs(collection(firestore, 'Markers'))
+      .then((querySnapshot)=>{               
+          const newData = querySnapshot.docs
+              .map((doc) => {
+                const docData = doc.data();
+                return {
+                  data: {
+                    'form.Latlng': {
+                      lat: docData.data['form.Latlng'].lat,
+                      lng: docData.data['form.Latlng'].lng,
+                    },
+                    'form.Address': docData.data['form.Address'],
+                    'form.Name': docData.data['form.Name'],
+                    'form.Image': docData.data['form.Image'],
+                    reviewIds: docData.data.reviewIds,
+                    mapType: docData.data.mapType,
+                  },
+                  id: doc.id,
+                };
+              });
+          setData(newData);                
+      })
+  }
+
+  useEffect(()=>{
+    fetchMarkers();
+  }, [])
 
   return (
     <StyledMapContainer center={[-27.469, 153.024]} zoom={13} scrollWheelZoom={false}>
@@ -53,9 +88,17 @@ export function MapComponent(props: Props) {
         userLocation.lat !== 0 && userLocation.lng !== 0 &&
         <DraggableMarker userLocation={userLocation} setMarkerPos={setMarkerPos} />
       }
-      {/* Loop through waypoints and add marker for each */}
-      <Markers pos={[-27.469, 153.024]} setShowReviewForm={setShowReviewForm} setSelectedMarker={setSelectedMarker} />
-      <Markers pos={[-27.469, 153.124]} setShowReviewForm={setShowReviewForm} setSelectedMarker={setSelectedMarker} />
+      {
+        data.length > 0 ? 
+          data.map(marker => (
+              <Markers
+                pos={[marker.data['form.Latlng'].lat, marker.data['form.Latlng'].lng]}
+                setShowReviewForm={setShowReviewForm}
+                setSelectedMarker={setSelectedMarker}
+              />
+          ))
+          : null /* loading screen */
+      }
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
