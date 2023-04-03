@@ -70,7 +70,6 @@ export function AddReviewForm(props: Props) {
   function handleChange(e: any) {
     const key = e.target.id;
     const value = e.target.value;
-    console.log(key, value);
     setFormData({...formData, [key]: value})
   }
 
@@ -160,11 +159,9 @@ export function AddReviewForm(props: Props) {
               <StarRating value={0} />
             </Form.Group>
           </StyledRow>
-          <StyledRow>
-            <Button variant='primary' type='submit' form='addReviewForm'>
-              Submit
-            </Button>
-          </StyledRow>
+          <Button variant='primary' type='submit' form='addReviewForm'>
+            Submit
+          </Button>
         </StyledForm>
       </StyledContainer>
     );

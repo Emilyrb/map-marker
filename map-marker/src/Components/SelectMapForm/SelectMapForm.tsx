@@ -45,7 +45,6 @@ export function SelectMapForm(props: Props) {
   function handleChange(e: any) {
     const key = e.target.id;
     const value = e.target.value;
-    console.log(key, value);
     setFormData({...formData, [key]: value})
   }
   function handleSubmit(e: any) {
@@ -66,7 +65,7 @@ export function SelectMapForm(props: Props) {
     return (
       <>
         <StyledContainer>
-          <StyledForm onSubmit={handleSubmit} id="myForm">
+          <StyledForm onSubmit={handleSubmit} id='selectMapForm'>
             <StyledRow>
               <Col><h1>Map name</h1></Col>
             </StyledRow>
@@ -76,7 +75,7 @@ export function SelectMapForm(props: Props) {
                 <Form.Control type='text' placeholder='Name' onChange={handleChange} />
               </Form.Group>
             </StyledRow>
-            <Button variant="primary" type="submit" form="myForm">
+            <Button variant='primary' type='submit' form='selectMapForm'>
               Submit
             </Button>
           </StyledForm>

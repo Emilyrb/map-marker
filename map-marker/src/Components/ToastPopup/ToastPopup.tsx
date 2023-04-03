@@ -18,7 +18,7 @@ export function ToastPopup(props: Props){
   return (
     <StyledToast onClose={() => setShowToast(false)}>
       <Toast.Header>
-        <strong className="me-auto" style={{color: 'red'}}>{headerText}</strong>
+        <strong className='me-auto' style={{color: 'red'}}>{headerText}</strong>
       </Toast.Header>
       <Toast.Body>{bodyText}</Toast.Body>
     </StyledToast>

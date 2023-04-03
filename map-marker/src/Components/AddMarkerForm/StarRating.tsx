@@ -17,6 +17,7 @@ const StyledButton = styled.button`
     border: 0;
     outline: none;
   }
+  padding: 0 5px;
 `;
 
 export function StarRating(props: Props) {

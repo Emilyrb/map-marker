@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { addDoc, collection } from '@firebase/firestore';
+import { firestore } from '../../firebase_setup/firebase';
 
 const StyledContainer = styled(Container)`
   padding: 0;
