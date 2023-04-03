@@ -59,18 +59,15 @@ export function MapComponent(props: Props) {
               .map((doc) => {
                 const docData = doc.data();
                 return {
-                  data: {
-                    'form.Latlng': {
-                      lat: docData.data['form.Latlng'].lat,
-                      lng: docData.data['form.Latlng'].lng,
-                    },
-                    'form.Address': docData.data['form.Address'],
-                    'form.Name': docData.data['form.Name'],
-                    'form.Image': docData.data['form.Image'],
-                    reviewIds: docData.data.reviewIds,
-                    mapType: docData.data.mapType,
+                  'form.Latlng': {
+                    lat: docData.data['form.Latlng'].lat,
+                    lng: docData.data['form.Latlng'].lng,
                   },
-                  id: doc.id,
+                  'form.Address': docData.data['form.Address'],
+                  'form.Name': docData.data['form.Name'],
+                  'form.Image': docData.data['form.Image'],
+                  reviewIds: docData.data.reviewIds,
+                  mapType: docData.data.mapType,
                 };
               });
           setData(newData);                
@@ -92,7 +89,7 @@ export function MapComponent(props: Props) {
         data.length > 0 ? 
           data.map(marker => (
               <Markers
-                pos={[marker.data['form.Latlng'].lat, marker.data['form.Latlng'].lng]}
+                pos={[marker['form.Latlng'].lat, marker['form.Latlng'].lng]}
                 setShowReviewForm={setShowReviewForm}
                 setSelectedMarker={setSelectedMarker}
               />

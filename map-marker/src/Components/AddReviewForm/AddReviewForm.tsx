@@ -4,6 +4,8 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { StarRating } from '../AddMarkerForm/StarRating';
+import { firestore } from '../../firebase_setup/firebase';
+import { addDoc, collection } from '@firebase/firestore';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -53,19 +55,26 @@ interface Props{
 export function AddReviewForm(props: Props) {
   const { setShowForm, markerToAddReview } = props;
   const [ formData, setFormData ] = useState({
+    'location': {lat: markerToAddReview.lat, lng: markerToAddReview.lng},
     'form.Name': '',
     'form.Date': '',
     'form.Time': '',
-    'form.BeginnerFriendly': '',
-    'form.AdvancedFriendly': '',
-    'form.Safety': '',
-    'form.Busy': '',
+    'form.BeginnerFriendly': 0,
+    'form.AdvancedFriendly': 0,
+    'form.Safety': 0,
+    'form.Busy': 0,
     'form.Ramps': '',
     'form.DropIns': '',
     'form.PumpTrack': '',
     'form.Bowl': '',
-    'form.OverallRating': '',
+    'form.OverallRating': 0,
   })
+  const [ beginnerFriendly, setBeginnerFriendly ] = useState(0);
+  const [ advancedFriendly, setAdvancedFriendly ] = useState(0);
+  const [ safety, setSafety ] = useState(0);
+  const [ busy, setBusy ] = useState(0);
+  const [ overallRating, setOverallRating ] = useState(0);
+  
 
   function handleChange(e: any) {
     const key = e.target.id;
@@ -73,13 +82,24 @@ export function AddReviewForm(props: Props) {
     setFormData({...formData, [key]: value})
   }
 
-  function handleStarChange(){
-
-  }
-
   function handleSubmit(e: any) {
     console.log('marker pos is', markerToAddReview);
     e.preventDefault();
+
+    console.log('handling submit');
+    const ref = collection(firestore, 'Reviews');
+    let data = {
+      data: formData
+    };
+    try {
+      console.log('reviews', data);
+      addDoc(ref, data);
+      // refetch the new data....
+      // reset formData to initial ?
+    } catch(err) {
+      console.log(err);
+      // error toast could not fetch data
+    }
   };
 
     return (
@@ -112,21 +132,21 @@ export function AddReviewForm(props: Props) {
           <StyledRow>
             <Form.Group as={Col} controlId='form.BeginnerFriendly'>
               <Form.Label>Beginner Friendly</Form.Label>
-              <StarRating value={0} />
+              <StarRating rating={beginnerFriendly} setRating={setBeginnerFriendly} formData={formData} setFormData={setFormData} keyId={'form.BeginnerFriendly'} />
             </Form.Group>
             <Form.Group as={Col} controlId='form.AdvancedFriendly'>
               <Form.Label>Advanced Friendly</Form.Label>
-              <StarRating value={0} />
+              <StarRating rating={advancedFriendly} setRating={setAdvancedFriendly} formData={formData} setFormData={setFormData} keyId={'form.AdvancedFriendly'} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
             <Form.Group as={Col} controlId='form.Safety'>
               <Form.Label>Safety</Form.Label>
-              <StarRating value={0} />
+              <StarRating rating={safety} setRating={setSafety} formData={formData} setFormData={setFormData} keyId={'form.Safety'} />
             </Form.Group>
             <Form.Group as={Col}controlId='form.Busy'>
               <Form.Label>Busy</Form.Label>
-              <StarRating value={0} />
+              <StarRating rating={busy} setRating={setBusy} formData={formData} setFormData={setFormData} keyId={'form.Busy'} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
@@ -156,7 +176,7 @@ export function AddReviewForm(props: Props) {
           <StyledRow>
             <Form.Group as={Col} controlId='form.OverallRating'>
               <Form.Label>Overall Rating</Form.Label>
-              <StarRating value={0} />
+              <StarRating rating={overallRating} setRating={setOverallRating} formData={formData} setFormData={setFormData} keyId={'form.OverallRating'} />
             </Form.Group>
           </StyledRow>
           <Button variant='primary' type='submit' form='addReviewForm'>

@@ -1,10 +1,14 @@
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
 import styled from 'styled-components';
+import { ReviewsDTO } from '../../Types';
 
 interface Props {
-  value: number;
+  rating: number;
+  setRating: React.Dispatch<React.SetStateAction<number>>;
+  formData: ReviewsDTO;
+  setFormData: React.Dispatch<React.SetStateAction<ReviewsDTO>>;
+  keyId: string;
 }
 
 const StyledButton = styled.button`
@@ -21,8 +25,7 @@ const StyledButton = styled.button`
 `;
 
 export function StarRating(props: Props) {
-  const { value } = props;
-  const [ rating, setRating ] = useState(value);
+  const { rating, setRating, formData, setFormData, keyId } = props;
 
   return (
     <div>
@@ -32,7 +35,10 @@ export function StarRating(props: Props) {
         <StyledButton
           type="button"
           key={index}
-          onClick={() => {console.log(index); setRating(index);}}
+          onClick={() => {
+            setRating(index);
+            setFormData({...formData, [keyId]: index});
+          }}
         >
           {
             index <= rating ?
