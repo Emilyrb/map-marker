@@ -1,7 +1,8 @@
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ToastPopup } from '../';
+import { MapContext } from '../../MapContext';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -30,12 +31,12 @@ const StyledRow = styled(Row)`
 `;
 
 interface Props {
-  setMapName: React.Dispatch<React.SetStateAction<string>>;
   setShowMap: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function SelectMapForm(props: Props) {
-  const { setMapName, setShowMap } = props;
+  const { setShowMap } = props;
+  const { setMapName } = useContext(MapContext);
   const [ showErrorPopup, setShowErrorPopup ] = useState(false);
 
   const [ formData, setFormData ] = useState({

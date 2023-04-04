@@ -2,21 +2,22 @@ import { Marker, Popup } from "react-leaflet";
 import { AddReviewButton } from "../AddReviewForm/AddReviewButton";
 import { getDocs, collection, where, query } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FetchReviewsDTO, MarkersDTO } from "../../Types";
 import { ViewReviews } from "./ViewReviews";
+import { MapContext } from "../../MapContext";
 
 interface Props{
   id: string;
   data: MarkersDTO;
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedMarkerId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const initData: FetchReviewsDTO[] = [];
 
 export function Markers(props: Props){
-  const { id, data, setShowReviewForm, setSelectedMarkerId } = props;
+  const { id, data, setShowReviewForm } = props;
+  const { setSelectedMarkerId } = useContext(MapContext);
   console.log('id of marker', data.name, 'is ', id);
   const [ reviewsData, setReviewsData ] = useState(initData);
   
@@ -52,7 +53,7 @@ export function Markers(props: Props){
         console.log(`No markers found on the ${selectedMapName} map.`);
       }
     }  else {
-      console.log(`${name} marker has no reviews`);
+      console.log(`${data.name} marker has no reviews`);
     }
   }
 

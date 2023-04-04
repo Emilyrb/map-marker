@@ -12,11 +12,7 @@ const AddMarkerBtn = styled.div`
   }
 `;
 
-interface Props{
-  markerPos: {lat: number, lng: number};
-}
-export function AddMarkerButton(props: Props) {
-  const { markerPos } = props;
+export function AddMarkerButton() {
   const [ showForm, setShowForm ] = useState(false);
 
   return (
@@ -24,7 +20,7 @@ export function AddMarkerButton(props: Props) {
       <AddMarkerBtn onClick={() => setShowForm(true)} >
         <FontAwesomeIcon icon={faCirclePlus} size={'2x'} />
       </AddMarkerBtn>
-      {showForm && <AddMarkerForm setShowForm={setShowForm} markerPos={markerPos} />}
+      {showForm && <AddMarkerForm setShowForm={setShowForm} />}
     </>
   );
 }

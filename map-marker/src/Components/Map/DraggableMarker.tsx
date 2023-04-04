@@ -1,10 +1,10 @@
 import { Marker } from 'react-leaflet';
-import { useMemo, useRef } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import L from 'leaflet';
+import { MapContext } from '../../MapContext';
 
 interface Props{
   userLocation: {lat: number, lng: number};
-  setMarkerPos: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
 };
 
 const redIcon = new L.Icon({
@@ -19,14 +19,15 @@ const redIcon = new L.Icon({
 });
 
 export function DraggableMarker(props: Props) {
-  const { userLocation, setMarkerPos } = props;
+  const { userLocation } = props;
+  const { setSelectedMarkerPos } = useContext(MapContext);
   const markerRef = useRef<L.Marker>(null);
   const eventHandlers = useMemo(
     () => ({
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
-          setMarkerPos(marker.getLatLng());
+          setSelectedMarkerPos(marker.getLatLng());
         }
       },
     }),

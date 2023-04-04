@@ -2,10 +2,11 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { StarRating } from '../AddMarkerForm/StarRating';
 import { firestore } from '../../firebase_setup/firebase';
 import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
+import { MapContext } from '../../MapContext';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -44,11 +45,11 @@ const CloseFormButton = styled.div`
 
 interface Props{
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  markerToAddReview: string;
 }
 
 export function AddReviewForm(props: Props) {
-  const { setShowForm, markerToAddReview } = props;
+  const { setShowForm } = props;
+  const { selectedMarkerId } = useContext(MapContext);
   const [ formData, setFormData ] = useState({
     username: '',
     date: '',
@@ -81,22 +82,22 @@ export function AddReviewForm(props: Props) {
 
   if (!mapSnapshot.empty) {
     const mapDoc = mapSnapshot.docs[0];
-    const markersRef = collection(firestore, 'maps3', mapDoc.id, 'markers', markerToAddReview, 'reviews');
+    const markersRef = collection(firestore, 'maps3', mapDoc.id, 'markers', selectedMarkerId, 'reviews');
 
     try {
       await addDoc(markersRef, formData);
-      console.log(`New review added to the ${markerToAddReview} marker`);
+      console.log(`New review added to the ${selectedMarkerId} marker`);
       setShowForm(false);
     } catch (error) {
-      console.log(`Error adding review to marker ${markerToAddReview} `, error);
+      console.log(`Error adding review to marker ${selectedMarkerId} `, error);
     }
   } else {
-    console.log(`Marker ${markerToAddReview} does not exist...`);
+    console.log(`Marker ${selectedMarkerId} does not exist...`);
   }
 };
 
   function handleSubmit(e: any) {
-    console.log('marker pos is', markerToAddReview);
+    console.log('marker pos is', selectedMarkerId);
     e.preventDefault();
 
     console.log('handling submit');

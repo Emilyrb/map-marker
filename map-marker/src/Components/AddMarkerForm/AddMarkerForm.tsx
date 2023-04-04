@@ -2,9 +2,10 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
+import { MapContext } from '../../MapContext';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -51,17 +52,17 @@ const StyledCheckbox = styled(Form.Check)`
 
 interface Props {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-    markerPos: {lat: number, lng: number};
 }
 
 export function AddMarkerForm(props: Props) {
-    const { setShowForm, markerPos } = props;
-    const [ formData, setFormData ] = useState({
-      id: '',
-      name: '',
-      address: '',
-      image: '',
-      latlng: {lat: 0, lng: 0},
+  const { setShowForm } = props;
+  const { selectedMarkerPos } = useContext(MapContext);
+  const [ formData, setFormData ] = useState({
+    id: '',
+    name: '',
+    address: '',
+    image: '',
+    latlng: {lat: 0, lng: 0},
   })
 
   function handleChange(e: any) {
@@ -70,7 +71,7 @@ export function AddMarkerForm(props: Props) {
     setFormData({...formData, [key]: value});
     setFormData(prevState => ({
       ...prevState,
-      'latlng': {lat: markerPos['lat'], lng: markerPos['lng']},
+      'latlng': {lat: selectedMarkerPos['lat'], lng: selectedMarkerPos['lng']},
     }));
   }
 

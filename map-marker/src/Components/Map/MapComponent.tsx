@@ -1,12 +1,13 @@
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DraggableMarker } from './DraggableMarker';
 import { getDocs, collection, query, where, setDoc, doc } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { Markers } from './Markers';
 import { FetchMarkersDTO } from '../../Types';
+import { MapContext } from '../../MapContext';
 
 const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
@@ -40,22 +41,20 @@ function LoadToUserLocation(props: loadLocationProps) {
 }
 
 interface Props{
-  setMarkerPos: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedMarkerId: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const initData: FetchMarkersDTO[] = [];
 
 export function MapComponent(props: Props) {
-  const { setMarkerPos, setShowReviewForm, setSelectedMarkerId } = props;
+  const { setShowReviewForm } = props;
+  const { mapName } = useContext(MapContext);
   const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
   const [ data, setData ] = useState(initData);
 
   async function fetchMarkers() {
-    const selectedMapName = 'skate';
     const mapRef = collection(firestore, 'maps3');
-    const mapQuery = query(mapRef, where('mapName', '==', selectedMapName));
+    const mapQuery = query(mapRef, where('mapName', '==', mapName));
     const mapSnapshot = await getDocs(mapQuery);
 
     if (!mapSnapshot.empty) {
@@ -77,22 +76,22 @@ export function MapComponent(props: Props) {
             bowl: doc.data().bowl,
           }
         }));
-        console.log(`Markers on the ${selectedMapName} map:`, markers);
+        console.log(`Markers on the ${mapName} map:`, markers);
         setData(markers);                
       } else {
-        console.log(`No markers found on the ${selectedMapName} map.`, mapSnapshot, mapQuery);
+        console.log(`No markers found on the ${mapName} map.`, mapSnapshot, mapQuery);
       }
     }  else {
-      console.log(`${selectedMapName} map does not exist`);
+      console.log(`${mapName} map does not exist`);
       try {
         const newMapRef = doc(mapRef); // create a new document reference in the "maps" collection
         const newMapData = {
-          mapName: selectedMapName
+          mapName: mapName
         };
         await setDoc(newMapRef, newMapData);
-        console.log(`New ${selectedMapName} map created.`);
+        console.log(`New ${mapName} map created.`);
       } catch (error) {
-        console.error(`Error creating new ${selectedMapName} map:`, error);
+        console.error(`Error creating new ${mapName} map:`, error);
       }
     }
   }
@@ -106,7 +105,7 @@ export function MapComponent(props: Props) {
       <LoadToUserLocation userLocation={userLocation} setUserLocation={setUserLocation}/>
       {
         userLocation.lat !== 0 && userLocation.lng !== 0 &&
-        <DraggableMarker userLocation={userLocation} setMarkerPos={setMarkerPos} />
+        <DraggableMarker userLocation={userLocation} />
       }
       {
         data.length > 0 ? 
@@ -115,7 +114,6 @@ export function MapComponent(props: Props) {
                 id={marker.id}
                 data={marker.data}
                 setShowReviewForm={setShowReviewForm}
-                setSelectedMarkerId={setSelectedMarkerId}
               />
           ))
           : null /* loading screen */

@@ -1,11 +1,13 @@
 export interface MarkersDTO {
   lat: number;
   lng: number;
-  // 'form.Address': string;
   name: string;
-  // 'form.Image': string;
-  // reviewIds: {[key: string]: string};
-  // mapType: string;
+  address: string;
+  ramps: number;
+  dropIns: number;
+  pumpTrack: string,
+  bowl: string,
+  // image: string;
 };
 
 export interface FetchMarkersDTO{
@@ -21,10 +23,7 @@ export interface ReviewsDTO {
   advancedFriendly: number,
   safety: number,
   busy: number,
-  ramps: string,
-  dropIns: string,
-  pumpTrack: string,
-  bowl: string,
+  comment: string,
   overallRating: number,
 };
 
