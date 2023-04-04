@@ -68,8 +68,13 @@ export function MapComponent(props: Props) {
           id: doc.id,
           data: {
             name: doc.data().name,
+            address: doc.data().address,
             lat: doc.data().latlng.lat,
             lng: doc.data().latlng.lng,
+            ramps: doc.data().ramps,
+            dropIns: doc.data().dropIns,
+            pumpTrack: doc.data().pumpTrack,
+            bowl: doc.data().bowl,
           }
         }));
         console.log(`Markers on the ${selectedMapName} map:`, markers);
@@ -108,8 +113,7 @@ export function MapComponent(props: Props) {
           data.map(marker => (
               <Markers
                 id={marker.id}
-                name={marker.data.name}
-                pos={[marker.data.lat, marker.data.lng]}
+                data={marker.data}
                 setShowReviewForm={setShowReviewForm}
                 setSelectedMarkerId={setSelectedMarkerId}
               />

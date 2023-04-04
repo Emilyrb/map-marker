@@ -43,6 +43,12 @@ const CloseFormButton = styled.div`
   }
 `;
 
+const StyledCheckbox = styled(Form.Check)`
+  transform: scale(1.5);
+  height: 30px;
+`;
+
+
 interface Props {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
     markerPos: {lat: number, lng: number};
@@ -93,16 +99,6 @@ export function AddMarkerForm(props: Props) {
     e.preventDefault();
     addMarker();
     setShowForm(false);
-    // const ref = collection(firestore, 'Markers');
-    // try {
-    //   console.log('markers', formData);
-    //   addDoc(ref, formData);
-    //   // refetch the new data....
-    //   // reset formData to initial ?
-    // } catch(err) {
-    //   console.log(err);
-    //   // error toast could not fetch data
-    // }
   }
 
     return (
@@ -127,9 +123,33 @@ export function AddMarkerForm(props: Props) {
             </Form.Group>
           </StyledRow>
           <StyledRow>
+            <Form.Group as={Col} controlId='ramps'>
+              <Form.Label>Ramps</Form.Label>
+              <Form.Control type='text' placeholder='2' onChange={handleChange}/>
+            </Form.Group>
+            <Form.Group as={Col} controlId='dropIns'>
+              <Form.Label>Drop Ins</Form.Label>
+              <Form.Control type='text' placeholder='3' onChange={handleChange}/>
+            </Form.Group>
+          </StyledRow>
+          <StyledRow>
+            <Form.Group as={Col} controlId='pumpTrack'>
+              <Form.Label>Pump Track</Form.Label>
+              <div>
+                <StyledCheckbox type='checkbox' id='pumpTrack' onChange={handleChange}/>
+              </div>
+            </Form.Group>
+            <Form.Group as={Col} controlId='bowl'>
+              <Form.Label>Bowl</Form.Label>
+              <div>
+                <StyledCheckbox type='checkbox' id='bowl' onChange={handleChange}/>
+              </div>
+            </Form.Group>
+          </StyledRow>
+          <StyledRow>
           <Form.Group controlId="image">
             <Form.Label>Upload Image</Form.Label>
-            <Form.Control type="file" />
+            <Form.Control type="file" disabled />
           </Form.Group>
           </StyledRow>
           <Button variant="primary" type="submit" form="addMarkerForm">

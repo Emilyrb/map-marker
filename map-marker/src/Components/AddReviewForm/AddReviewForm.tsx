@@ -32,11 +32,6 @@ const StyledRow = styled(Row)`
   padding: 5px 0;
 `;
 
-const StyledCheckbox = styled(Form.Check)`
-  transform: scale(1.5);
-  height: 30px;
-`;
-
 const CloseFormButton = styled.div`
   color: rgba(0,0,0,0.25);
   width: 40px;
@@ -62,10 +57,7 @@ export function AddReviewForm(props: Props) {
     advancedFriendly: 0,
     safety: 0,
     busy: 0,
-    ramps: '',
-    dropIns: '',
-    pumpTrack: '',
-    bowl: '',
+    comment: '',
     overallRating: 0,
   })
   const [ beginnerFriendlyVal, setBeginnerFriendlyVal ] = useState(0);
@@ -159,27 +151,9 @@ export function AddReviewForm(props: Props) {
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='ramps'>
-              <Form.Label>Ramps</Form.Label>
-              <Form.Control type='text' placeholder='2' onChange={handleChange}/>
-            </Form.Group>
-            <Form.Group as={Col} controlId='dropIns'>
-              <Form.Label>Drop Ins</Form.Label>
-              <Form.Control type='text' placeholder='3' onChange={handleChange}/>
-            </Form.Group>
-          </StyledRow>
-          <StyledRow>
-            <Form.Group as={Col} controlId='pumpTrack'>
-              <Form.Label>Pump Track</Form.Label>
-              <div>
-                <StyledCheckbox type='checkbox' id='pumpTrack' onChange={handleChange}/>
-              </div>
-            </Form.Group>
-            <Form.Group as={Col} controlId='bowl'>
-              <Form.Label>Bowl</Form.Label>
-              <div>
-                <StyledCheckbox type='checkbox' id='bowl' onChange={handleChange}/>
-              </div>
+            <Form.Group as={Col} controlId='username'>
+              <Form.Label>Comment</Form.Label>
+              <Form.Control type='textarea' placeholder='Not bad!' onChange={handleChange} />
             </Form.Group>
           </StyledRow>
           <StyledRow>

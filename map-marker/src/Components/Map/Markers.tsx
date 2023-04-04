@@ -3,13 +3,12 @@ import { AddReviewButton } from "../AddReviewForm/AddReviewButton";
 import { getDocs, collection, where, query } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { useEffect, useState } from "react";
-import { FetchReviewsDTO } from "../../Types";
+import { FetchReviewsDTO, MarkersDTO } from "../../Types";
 import { ViewReviews } from "./ViewReviews";
 
 interface Props{
   id: string;
-  name: string;
-  pos: [lat: number, lng: number];
+  data: MarkersDTO;
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedMarkerId: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -17,9 +16,9 @@ interface Props{
 const initData: FetchReviewsDTO[] = [];
 
 export function Markers(props: Props){
-  const { id, name, pos, setShowReviewForm, setSelectedMarkerId } = props;
-  console.log('id of marker', name, 'is ', id);
-  const [ data, setData ] = useState(initData);
+  const { id, data, setShowReviewForm, setSelectedMarkerId } = props;
+  console.log('id of marker', data.name, 'is ', id);
+  const [ reviewsData, setReviewsData ] = useState(initData);
   
   async function fetchReviews() {
     const selectedMapName = 'skate';
@@ -43,15 +42,12 @@ export function Markers(props: Props){
             advancedFriendly: doc.data().advancedFriendly,
             safety: doc.data().safety,
             busy: doc.data().busy,
-            ramps: doc.data().ramps,
-            dropIns: doc.data().dropIns,
-            pumpTrack: doc.data().pumpTrack,
-            bowl: doc.data().bowl,
+            comment: doc.data().comment,
             overallRating: doc.data().overallRating,
           }
         }));
         console.log(`Reviews on the ${selectedMapName} marker:`, reviews);
-        setData(reviews);                
+        setReviewsData(reviews);                
       } else {
         console.log(`No markers found on the ${selectedMapName} map.`);
       }
@@ -67,7 +63,7 @@ export function Markers(props: Props){
 
   return (
     <Marker
-    position={pos} 
+    position={[data.lat, data.lng]} 
     eventHandlers={{
       click: () => {
         console.log('setting marker to', id);
@@ -76,12 +72,14 @@ export function Markers(props: Props){
     }}
   >
     <Popup>
-      <h2>{name} Skate Park</h2>
-      <a href='#'>View {data.length} reviews</a>
-      <p>Add Review:</p>
-      <AddReviewButton setShowForm={setShowReviewForm} />
+      <h2>{data.name} Skate Park</h2>
+      <h3>{data.address}</h3>
+      <p>ramps: {data.ramps}</p>
+      <p>drop ins: {data.dropIns}</p>
+      <p>has pump track? {data.pumpTrack === 'on' ? 'Yes' : 'No'}</p>
+      <p>has bowl? {data.bowl === 'on'? 'Yes' : 'No'}</p>
       <AddReviewButton setShowForm={setShowReviewForm}>Add Review:</AddReviewButton>
-      <ViewReviews data={data} />
+      <ViewReviews data={reviewsData} />
     </Popup>
   </Marker>
   );
