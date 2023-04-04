@@ -3,10 +3,10 @@ import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { DraggableMarker } from './DraggableMarker';
-import { getDocs, collection } from '@firebase/firestore';
+import { getDocs, collection, query, where, setDoc, doc } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { Markers } from './Markers';
-import { MarkersDTO } from '../../Types';
+import { FetchMarkersDTO } from '../../Types';
 
 const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
@@ -42,36 +42,54 @@ function LoadToUserLocation(props: loadLocationProps) {
 interface Props{
   setMarkerPos: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedMarker: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
+  setSelectedMarkerId: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const initData: MarkersDTO[] = [];
+const initData: FetchMarkersDTO[] = [];
 
 export function MapComponent(props: Props) {
-  const { setMarkerPos, setShowReviewForm, setSelectedMarker } = props;
+  const { setMarkerPos, setShowReviewForm, setSelectedMarkerId } = props;
   const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
   const [ data, setData ] = useState(initData);
 
-  const fetchMarkers = async () => {
-    await getDocs(collection(firestore, 'Markers'))
-      .then((querySnapshot)=>{               
-          const newData = querySnapshot.docs
-              .map((doc) => {
-                const docData = doc.data();
-                return {
-                  'form.Latlng': {
-                    lat: docData.data['form.Latlng'].lat,
-                    lng: docData.data['form.Latlng'].lng,
-                  },
-                  'form.Address': docData.data['form.Address'],
-                  'form.Name': docData.data['form.Name'],
-                  'form.Image': docData.data['form.Image'],
-                  reviewIds: docData.data.reviewIds,
-                  mapType: docData.data.mapType,
-                };
-              });
-          setData(newData);                
-      })
+  async function fetchMarkers() {
+    const selectedMapName = 'skate';
+    const mapRef = collection(firestore, 'maps3');
+    const mapQuery = query(mapRef, where('mapName', '==', selectedMapName));
+    const mapSnapshot = await getDocs(mapQuery);
+
+    if (!mapSnapshot.empty) {
+      const mapDoc = mapSnapshot.docs[0];
+      const markersRef = collection(firestore, 'maps3', mapDoc.id ,'markers');
+      const markersSnapshot = await getDocs(markersRef);
+
+      if (!markersSnapshot.empty) {
+        const markers = markersSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: {
+            name: doc.data().name,
+            lat: doc.data().latlng.lat,
+            lng: doc.data().latlng.lng,
+          }
+        }));
+        console.log(`Markers on the ${selectedMapName} map:`, markers);
+        setData(markers);                
+      } else {
+        console.log(`No markers found on the ${selectedMapName} map.`, mapSnapshot, mapQuery);
+      }
+    }  else {
+      console.log(`${selectedMapName} map does not exist`);
+      try {
+        const newMapRef = doc(mapRef); // create a new document reference in the "maps" collection
+        const newMapData = {
+          mapName: selectedMapName
+        };
+        await setDoc(newMapRef, newMapData);
+        console.log(`New ${selectedMapName} map created.`);
+      } catch (error) {
+        console.error(`Error creating new ${selectedMapName} map:`, error);
+      }
+    }
   }
 
   useEffect(()=>{
@@ -89,9 +107,11 @@ export function MapComponent(props: Props) {
         data.length > 0 ? 
           data.map(marker => (
               <Markers
-                pos={[marker['form.Latlng'].lat, marker['form.Latlng'].lng]}
+                id={marker.id}
+                name={marker.data.name}
+                pos={[marker.data.lat, marker.data.lng]}
                 setShowReviewForm={setShowReviewForm}
-                setSelectedMarker={setSelectedMarker}
+                setSelectedMarkerId={setSelectedMarkerId}
               />
           ))
           : null /* loading screen */

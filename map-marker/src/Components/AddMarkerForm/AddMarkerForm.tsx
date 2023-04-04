@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useState } from 'react';
-import { addDoc, collection } from '@firebase/firestore';
+import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 
 const StyledContainer = styled(Container)`
@@ -51,41 +51,59 @@ interface Props {
 export function AddMarkerForm(props: Props) {
     const { setShowForm, markerPos } = props;
     const [ formData, setFormData ] = useState({
-      'form.Name': '',
-      'form.Address': '',
-      'form.Image': '',
-      'form.Latlng': {lat: 0, lng: 0},
-      'reviewIds': {},
-      'mapType': 'skate',
+      id: '',
+      name: '',
+      address: '',
+      image: '',
+      latlng: {lat: 0, lng: 0},
   })
 
   function handleChange(e: any) {
     const key = e.target.id;
     const value = e.target.value;
     setFormData({...formData, [key]: value});
-    console.log('markerPos is', markerPos);
     setFormData(prevState => ({
       ...prevState,
-      'form.Latlng': {lat: markerPos['lat'], lng: markerPos['lng']},
+      'latlng': {lat: markerPos['lat'], lng: markerPos['lng']},
     }));
   }
 
+  async function addMarker() {
+    const selectedMapName = 'skate';
+    const mapRef = collection(firestore, 'maps3');
+    const mapQuery = query(mapRef, where('mapName', '==', selectedMapName));
+    const mapSnapshot = await getDocs(mapQuery);
+  
+    if (!mapSnapshot.empty) {
+      const mapDoc = mapSnapshot.docs[0];
+      const markersRef = collection(firestore, 'maps3', mapDoc.id, 'markers');
+
+      try {
+        await addDoc(markersRef, formData);
+        console.log(`New marker added to the ${selectedMapName} map`);
+      } catch (error) {
+        console.error(`Error adding marker to the ${selectedMapName} map`, error);
+      }
+    } else {
+      console.log(`The ${selectedMapName} map does not exist.`);
+    }
+  };
+
   function handleSubmit(e: any) {
     e.preventDefault();
-
-    console.log('handling submit');
-    const ref = collection(firestore, 'Markers');
-    let data = {
-      data: formData
-    };
-    try {
-      console.log(data);
-      addDoc(ref, data);
-      // refetch the new data....
-    } catch(err) {
-      console.log(err);
-    }
-}
+    addMarker();
+    setShowForm(false);
+    // const ref = collection(firestore, 'Markers');
+    // try {
+    //   console.log('markers', formData);
+    //   addDoc(ref, formData);
+    //   // refetch the new data....
+    //   // reset formData to initial ?
+    // } catch(err) {
+    //   console.log(err);
+    //   // error toast could not fetch data
+    // }
+  }
 
     return (
       <StyledContainer>
@@ -99,17 +117,17 @@ export function AddMarkerForm(props: Props) {
             </Col>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.Name'>
+            <Form.Group as={Col} controlId='name'>
                 <Form.Label>Name</Form.Label>
                 <Form.Control type='text' placeholder='Kuraby' onChange={handleChange} />
             </Form.Group>
-            <Form.Group as={Col} controlId='form.Address'>
+            <Form.Group as={Col} controlId='address'>
                 <Form.Label>Address</Form.Label>
                 <Form.Control type='text' placeholder='1300A Beenleigh Rd, Kuraby QLD 4112' onChange={handleChange}/>
             </Form.Group>
           </StyledRow>
           <StyledRow>
-          <Form.Group controlId="form.Image">
+          <Form.Group controlId="image">
             <Form.Label>Upload Image</Form.Label>
             <Form.Control type="file" />
           </Form.Group>

@@ -1,27 +1,34 @@
 export interface MarkersDTO {
-  'form.Latlng': {
-    lat: number;
-    lng: number;
-  };
-  'form.Address': string;
-  'form.Name': string;
-  'form.Image': string;
-  reviewIds: {[key: string]: string};
-  mapType: string;
+  lat: number;
+  lng: number;
+  // 'form.Address': string;
+  name: string;
+  // 'form.Image': string;
+  // reviewIds: {[key: string]: string};
+  // mapType: string;
 };
 
+export interface FetchMarkersDTO{
+  id: string;
+  data: MarkersDTO;
+}
+
 export interface ReviewsDTO {
-  'location': {lat: number, lng: number},
-  'form.Name': string,
-  'form.Date': string,
-  'form.Time': string,
-  'form.BeginnerFriendly': number,
-  'form.AdvancedFriendly': number,
-  'form.Safety': number,
-  'form.Busy': number,
-  'form.Ramps': string,
-  'form.DropIns': string,
-  'form.PumpTrack': string,
-  'form.Bowl': string,
-  'form.OverallRating': number,
+  username: string,
+  date: string,
+  time: string,
+  beginnerFriendly: number,
+  advancedFriendly: number,
+  safety: number,
+  busy: number,
+  ramps: string,
+  dropIns: string,
+  pumpTrack: string,
+  bowl: string,
+  overallRating: number,
 };
+
+export interface FetchReviewsDTO{
+  id: string;
+  data: ReviewsDTO;
+}

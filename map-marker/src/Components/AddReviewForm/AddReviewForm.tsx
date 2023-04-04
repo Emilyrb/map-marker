@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { StarRating } from '../AddMarkerForm/StarRating';
 import { firestore } from '../../firebase_setup/firebase';
-import { addDoc, collection } from '@firebase/firestore';
+import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -49,31 +49,30 @@ const CloseFormButton = styled.div`
 
 interface Props{
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
-  markerToAddReview: {lat: number, lng: number};
+  markerToAddReview: string;
 }
 
 export function AddReviewForm(props: Props) {
   const { setShowForm, markerToAddReview } = props;
   const [ formData, setFormData ] = useState({
-    'location': {lat: markerToAddReview.lat, lng: markerToAddReview.lng},
-    'form.Name': '',
-    'form.Date': '',
-    'form.Time': '',
-    'form.BeginnerFriendly': 0,
-    'form.AdvancedFriendly': 0,
-    'form.Safety': 0,
-    'form.Busy': 0,
-    'form.Ramps': '',
-    'form.DropIns': '',
-    'form.PumpTrack': '',
-    'form.Bowl': '',
-    'form.OverallRating': 0,
+    username: '',
+    date: '',
+    time: '',
+    beginnerFriendly: 0,
+    advancedFriendly: 0,
+    safety: 0,
+    busy: 0,
+    ramps: '',
+    dropIns: '',
+    pumpTrack: '',
+    bowl: '',
+    overallRating: 0,
   })
-  const [ beginnerFriendly, setBeginnerFriendly ] = useState(0);
-  const [ advancedFriendly, setAdvancedFriendly ] = useState(0);
-  const [ safety, setSafety ] = useState(0);
-  const [ busy, setBusy ] = useState(0);
-  const [ overallRating, setOverallRating ] = useState(0);
+  const [ beginnerFriendlyVal, setBeginnerFriendlyVal ] = useState(0);
+  const [ advancedFriendlyVal, setAdvancedFriendlyVal ] = useState(0);
+  const [ safetyVal, setSafetyVal ] = useState(0);
+  const [ busyVal, setBusyVal ] = useState(0);
+  const [ overallRatingVal, setOverallRatingVal ] = useState(0);
   
 
   function handleChange(e: any) {
@@ -82,24 +81,34 @@ export function AddReviewForm(props: Props) {
     setFormData({...formData, [key]: value})
   }
 
+  async function addReview() {
+  const selectedMapName = 'skate';
+  const mapRef = collection(firestore, 'maps3');
+  const mapQuery = query(mapRef, where('mapName', '==', selectedMapName));
+  const mapSnapshot = await getDocs(mapQuery);
+
+  if (!mapSnapshot.empty) {
+    const mapDoc = mapSnapshot.docs[0];
+    const markersRef = collection(firestore, 'maps3', mapDoc.id, 'markers', markerToAddReview, 'reviews');
+
+    try {
+      await addDoc(markersRef, formData);
+      console.log(`New review added to the ${markerToAddReview} marker`);
+      setShowForm(false);
+    } catch (error) {
+      console.log(`Error adding review to marker ${markerToAddReview} `, error);
+    }
+  } else {
+    console.log(`Marker ${markerToAddReview} does not exist...`);
+  }
+};
+
   function handleSubmit(e: any) {
     console.log('marker pos is', markerToAddReview);
     e.preventDefault();
 
     console.log('handling submit');
-    const ref = collection(firestore, 'Reviews');
-    let data = {
-      data: formData
-    };
-    try {
-      console.log('reviews', data);
-      addDoc(ref, data);
-      // refetch the new data....
-      // reset formData to initial ?
-    } catch(err) {
-      console.log(err);
-      // error toast could not fetch data
-    }
+    addReview();
   };
 
     return (
@@ -114,69 +123,69 @@ export function AddReviewForm(props: Props) {
             </Col>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.Name'>
-              <Form.Label>Name</Form.Label>
+            <Form.Group as={Col} controlId='username'>
+              <Form.Label>Username</Form.Label>
               <Form.Control type='text' placeholder='Emily' onChange={handleChange} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.Date'>
+            <Form.Group as={Col} controlId='date'>
               <Form.Label>Date</Form.Label>
               <Form.Control type='date' onChange={handleChange} />
             </Form.Group>
-            <Form.Group as={Col} controlId='form.Time'>
+            <Form.Group as={Col} controlId='time'>
               <Form.Label>Time</Form.Label>
               <Form.Control type='time' onChange={handleChange} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.BeginnerFriendly'>
+            <Form.Group as={Col} controlId='beginnerFriendly'>
               <Form.Label>Beginner Friendly</Form.Label>
-              <StarRating rating={beginnerFriendly} setRating={setBeginnerFriendly} formData={formData} setFormData={setFormData} keyId={'form.BeginnerFriendly'} />
+              <StarRating rating={beginnerFriendlyVal} setRating={setBeginnerFriendlyVal} formData={formData} setFormData={setFormData} keyId={'beginnerFriendly'} />
             </Form.Group>
-            <Form.Group as={Col} controlId='form.AdvancedFriendly'>
+            <Form.Group as={Col} controlId='advancedFriendly'>
               <Form.Label>Advanced Friendly</Form.Label>
-              <StarRating rating={advancedFriendly} setRating={setAdvancedFriendly} formData={formData} setFormData={setFormData} keyId={'form.AdvancedFriendly'} />
+              <StarRating rating={advancedFriendlyVal} setRating={setAdvancedFriendlyVal} formData={formData} setFormData={setFormData} keyId={'advancedFriendly'} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.Safety'>
+            <Form.Group as={Col} controlId='safety'>
               <Form.Label>Safety</Form.Label>
-              <StarRating rating={safety} setRating={setSafety} formData={formData} setFormData={setFormData} keyId={'form.Safety'} />
+              <StarRating rating={safetyVal} setRating={setSafetyVal} formData={formData} setFormData={setFormData} keyId={'safety'} />
             </Form.Group>
-            <Form.Group as={Col}controlId='form.Busy'>
+            <Form.Group as={Col}controlId='busy'>
               <Form.Label>Busy</Form.Label>
-              <StarRating rating={busy} setRating={setBusy} formData={formData} setFormData={setFormData} keyId={'form.Busy'} />
+              <StarRating rating={busyVal} setRating={setBusyVal} formData={formData} setFormData={setFormData} keyId={'busy'} />
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.Ramps'>
+            <Form.Group as={Col} controlId='ramps'>
               <Form.Label>Ramps</Form.Label>
               <Form.Control type='text' placeholder='2' onChange={handleChange}/>
             </Form.Group>
-            <Form.Group as={Col} controlId='form.DropIns'>
+            <Form.Group as={Col} controlId='dropIns'>
               <Form.Label>Drop Ins</Form.Label>
               <Form.Control type='text' placeholder='3' onChange={handleChange}/>
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.PumpTrack'>
+            <Form.Group as={Col} controlId='pumpTrack'>
               <Form.Label>Pump Track</Form.Label>
               <div>
-                <StyledCheckbox type='checkbox' id='form.PumpTrack' onChange={handleChange}/>
+                <StyledCheckbox type='checkbox' id='pumpTrack' onChange={handleChange}/>
               </div>
             </Form.Group>
-            <Form.Group as={Col} controlId='form.Bowl'>
+            <Form.Group as={Col} controlId='bowl'>
               <Form.Label>Bowl</Form.Label>
               <div>
-                <StyledCheckbox type='checkbox' id='form.Bowl' onChange={handleChange}/>
+                <StyledCheckbox type='checkbox' id='bowl' onChange={handleChange}/>
               </div>
             </Form.Group>
           </StyledRow>
           <StyledRow>
-            <Form.Group as={Col} controlId='form.OverallRating'>
+            <Form.Group as={Col} controlId='overallRating'>
               <Form.Label>Overall Rating</Form.Label>
-              <StarRating rating={overallRating} setRating={setOverallRating} formData={formData} setFormData={setFormData} keyId={'form.OverallRating'} />
+              <StarRating rating={overallRatingVal} setRating={setOverallRatingVal} formData={formData} setFormData={setFormData} keyId={'overallRating'} />
             </Form.Group>
           </StyledRow>
           <Button variant='primary' type='submit' form='addReviewForm'>

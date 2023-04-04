@@ -6,9 +6,9 @@ import { useState } from 'react';
 function App() {
   const [ showMap, setShowMap ] = useState(false);
   const [ mapName, setMapName ] = useState('');
-  const [ markerPos, setMarkerPos ] = useState({lat: 0, lng: 0});
   const [ showReviewForm, setShowReviewForm ] = useState(false);
-  const [ selectedMarker, setSelectedMarker ] = useState({lat: 0, lng: 0});
+  const [ markerPos, setMarkerPos ] = useState({lat: 0, lng: 0});
+  const [ selectedMarkerId, setSelectedMarkerId ] = useState('');
   
   return (
     <div className='App'>
@@ -29,10 +29,10 @@ function App() {
         </Container>
       </Navbar>
       {
-        showMap ? <MapComponent mapName={mapName} setMarkerPos={setMarkerPos} setShowReviewForm={setShowReviewForm} setSelectedMarker={setSelectedMarker} /> : <SelectMapForm setMapName={setMapName} setShowMap={setShowMap} />
+        showMap ? <MapComponent mapName={mapName} setMarkerPos={setMarkerPos} setShowReviewForm={setShowReviewForm} setSelectedMarkerId={setSelectedMarkerId} /> : <SelectMapForm setMapName={setMapName} setShowMap={setShowMap} />
       }
       {
-        showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} markerToAddReview={selectedMarker} /> : null
+        showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} markerToAddReview={selectedMarkerId} /> : null
       }
     </div>
   );
