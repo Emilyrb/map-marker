@@ -5,11 +5,8 @@ import { useState } from 'react';
 
 function App() {
   const [ showMap, setShowMap ] = useState(false);
-  const [ mapName, setMapName ] = useState('');
   const [ showReviewForm, setShowReviewForm ] = useState(false);
-  const [ markerPos, setMarkerPos ] = useState({lat: 0, lng: 0});
-  const [ selectedMarkerId, setSelectedMarkerId ] = useState('');
-  
+
   return (
     <div className='App'>
       <link
@@ -23,16 +20,18 @@ function App() {
           <Navbar.Brand href='#home'>Map Marker</Navbar.Brand>
           <Navbar.Text>
             {
-              showMap ? <AddMarkerButton markerPos={markerPos} /> : null 
+              showMap ? <AddMarkerButton /> : null 
             }
           </Navbar.Text>
         </Container>
       </Navbar>
       {
-        showMap ? <MapComponent mapName={mapName} setMarkerPos={setMarkerPos} setShowReviewForm={setShowReviewForm} setSelectedMarkerId={setSelectedMarkerId} /> : <SelectMapForm setMapName={setMapName} setShowMap={setShowMap} />
+        showMap ?
+          <MapComponent setShowReviewForm={setShowReviewForm} />
+          : <SelectMapForm setShowMap={setShowMap} />
       }
       {
-        showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} markerToAddReview={selectedMarkerId} /> : null
+        showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} /> : null
       }
     </div>
   );

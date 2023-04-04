@@ -23,7 +23,7 @@ export const MapProvider = (props: any) => {
   const [mapName, setMapName] = useState('');
   const [selectedMarkerPos, setSelectedMarkerPos] = useState({lat: 0, lng: 0});
   const [selectedMarkerId, setSelectedMarkerId] = useState('');
-  console.log('states are ready', mapName, selectedMarkerPos, selectedMarkerId);
+
   return (
     <MapContext.Provider value={{ mapName, setMapName, selectedMarkerPos, setSelectedMarkerPos, selectedMarkerId, setSelectedMarkerId }}>
       {props.children}
