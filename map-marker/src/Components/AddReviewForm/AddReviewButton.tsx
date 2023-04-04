@@ -12,13 +12,14 @@ const AddMarkerBtn = styled.div`
 
 interface Props{
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  children?: React.ReactNode;
 }
 export function AddReviewButton(props: Props) {
-  const { setShowForm } = props;
+  const { setShowForm, children } = props;
 
   return (
     <AddMarkerBtn onClick={() => setShowForm(true)} >
-      <FontAwesomeIcon icon={faCirclePlus} size={'2x'} />
+      <span>{children} <FontAwesomeIcon icon={faCirclePlus} size={'2x'} /></span>
     </AddMarkerBtn>
   );
 }

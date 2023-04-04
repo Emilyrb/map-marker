@@ -4,6 +4,7 @@ import { getDocs, collection, where, query } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { useEffect, useState } from "react";
 import { FetchReviewsDTO } from "../../Types";
+import { ViewReviews } from "./ViewReviews";
 
 interface Props{
   id: string;
@@ -63,6 +64,7 @@ export function Markers(props: Props){
   useEffect(()=>{
     fetchReviews();
   }, []);
+
   return (
     <Marker
     position={pos} 
@@ -78,6 +80,8 @@ export function Markers(props: Props){
       <a href='#'>View {data.length} reviews</a>
       <p>Add Review:</p>
       <AddReviewButton setShowForm={setShowReviewForm} />
+      <AddReviewButton setShowForm={setShowReviewForm}>Add Review:</AddReviewButton>
+      <ViewReviews data={data} />
     </Popup>
   </Marker>
   );
