@@ -35,6 +35,7 @@ function LoadToUserLocation(props: loadLocationProps) {
       setUserLocation(e.latlng);
       map.flyTo(e.latlng, map.getZoom());
     });
+    map.on('locationerror', () => alert('user denied access to location'));
 
   }
   return null;
@@ -67,7 +68,6 @@ export function MapComponent(props: Props) {
           id: doc.id,
           data: {
             name: doc.data().name,
-            address: doc.data().address,
             lat: doc.data().latlng.lat,
             lng: doc.data().latlng.lng,
             ramps: doc.data().ramps,

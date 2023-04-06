@@ -36,20 +36,19 @@ interface Props {
 
 export function SelectMapForm(props: Props) {
   const { setShowMap } = props;
-  const { setMapName } = useContext(MapContext);
+  const { mapName, setMapName } = useContext(MapContext);
   const [ showErrorPopup, setShowErrorPopup ] = useState(false);
 
-  const [ formData, setFormData ] = useState({
-    'form.Name': '',
-})
+  const [ formData, setFormData ] = useState({name: ''});
 
   function handleChange(e: any) {
     const key = e.target.id;
     const value = e.target.value;
     setFormData({...formData, [key]: value})
   }
+
   function handleSubmit(e: any) {
-    const mapNameValue = formData['form.Name'];
+    const mapNameValue = formData.name;
     e.preventDefault();
     setMapName(mapNameValue);
     
@@ -71,7 +70,7 @@ export function SelectMapForm(props: Props) {
               <Col><h1>Map name</h1></Col>
             </StyledRow>
             <StyledRow>
-              <Form.Group as={Col} controlId='form.Name'>
+              <Form.Group as={Col} controlId='name'>
                 <Form.Label>Which map do you want to view?</Form.Label>
                 <Form.Control type='text' placeholder='Name' onChange={handleChange} />
               </Form.Group>
@@ -82,7 +81,7 @@ export function SelectMapForm(props: Props) {
           </StyledForm>
         </StyledContainer>
         {
-          showErrorPopup ? <ToastPopup setShowToast={setShowErrorPopup} headerText={'Error'} bodyText={'This map does not exist'} /> : null
+          showErrorPopup ? <ToastPopup setShowToast={setShowErrorPopup} headerText={'Error'} bodyText={`${mapName} map does not exist`} /> : null
         }
       </>
     );

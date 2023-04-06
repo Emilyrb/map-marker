@@ -74,7 +74,6 @@ export function Markers(props: Props){
   >
     <Popup>
       <h2>{data.name} Skate Park</h2>
-      <h3>{data.address}</h3>
       <p>ramps: {data.ramps}</p>
       <p>drop ins: {data.dropIns}</p>
       <p>has pump track? {data.pumpTrack === 'on' ? 'Yes' : 'No'}</p>

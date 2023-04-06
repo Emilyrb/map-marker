@@ -56,14 +56,13 @@ interface Props {
 
 export function AddMarkerForm(props: Props) {
   const { setShowForm } = props;
-  const { selectedMarkerPos } = useContext(MapContext);
   const [ formData, setFormData ] = useState({
     id: '',
     name: '',
-    address: '',
     image: '',
     latlng: {lat: 0, lng: 0},
   })
+  const { selectedMarkerPos, mapName } = useContext(MapContext);
 
   function handleChange(e: any) {
     const key = e.target.id;
@@ -76,9 +75,8 @@ export function AddMarkerForm(props: Props) {
   }
 
   async function addMarker() {
-    const selectedMapName = 'skate';
     const mapRef = collection(firestore, 'maps3');
-    const mapQuery = query(mapRef, where('mapName', '==', selectedMapName));
+    const mapQuery = query(mapRef, where('mapName', '==', mapName));
     const mapSnapshot = await getDocs(mapQuery);
   
     if (!mapSnapshot.empty) {
@@ -87,12 +85,12 @@ export function AddMarkerForm(props: Props) {
 
       try {
         await addDoc(markersRef, formData);
-        console.log(`New marker added to the ${selectedMapName} map`);
+        console.log(`New marker added to the ${mapName} map`);
       } catch (error) {
-        console.error(`Error adding marker to the ${selectedMapName} map`, error);
+        console.error(`Error adding marker to the ${mapName} map`, error);
       }
     } else {
-      console.log(`The ${selectedMapName} map does not exist.`);
+      console.log(`The ${mapName} map does not exist.`);
     }
   };
 
@@ -117,10 +115,6 @@ export function AddMarkerForm(props: Props) {
             <Form.Group as={Col} controlId='name'>
                 <Form.Label>Name</Form.Label>
                 <Form.Control type='text' placeholder='Kuraby' onChange={handleChange} />
-            </Form.Group>
-            <Form.Group as={Col} controlId='address'>
-                <Form.Label>Address</Form.Label>
-                <Form.Control type='text' placeholder='1300A Beenleigh Rd, Kuraby QLD 4112' onChange={handleChange}/>
             </Form.Group>
           </StyledRow>
           <StyledRow>

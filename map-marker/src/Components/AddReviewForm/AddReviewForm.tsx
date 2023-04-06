@@ -20,7 +20,7 @@ const StyledContainer = styled(Container)`
 const StyledForm = styled(Form)`
   width: 100%;
   border-radius: 10px; 
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.9);
   padding: 10px;
   color: black;
 `;
@@ -49,7 +49,7 @@ interface Props{
 
 export function AddReviewForm(props: Props) {
   const { setShowForm } = props;
-  const { selectedMarkerId } = useContext(MapContext);
+  const { selectedMarkerId, mapName } = useContext(MapContext);
   const [ formData, setFormData ] = useState({
     username: '',
     date: '',
@@ -75,9 +75,8 @@ export function AddReviewForm(props: Props) {
   }
 
   async function addReview() {
-  const selectedMapName = 'skate';
   const mapRef = collection(firestore, 'maps3');
-  const mapQuery = query(mapRef, where('mapName', '==', selectedMapName));
+  const mapQuery = query(mapRef, where('mapName', '==', mapName));
   const mapSnapshot = await getDocs(mapQuery);
 
   if (!mapSnapshot.empty) {

@@ -15,6 +15,7 @@ function App() {
         integrity='sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS'
         crossorigin='anonymous'
       />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <Navbar bg='dark' variant='dark'>
         <Container>
           <Navbar.Brand href='#home'>Map Marker</Navbar.Brand>
