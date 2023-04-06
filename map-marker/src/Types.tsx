@@ -1,33 +1,41 @@
-export interface MarkersDTO {
+export interface GenericMarkersDTO {
   lat: number;
   lng: number;
   name: string;
-  address: string;
+  // image: string;
+};
+
+export interface SkateMarkersDTO extends GenericMarkersDTO {
   ramps: number;
   dropIns: number;
   pumpTrack: string,
   bowl: string,
-  // image: string;
 };
+
+export type AllMarkersDTO = GenericMarkersDTO | SkateMarkersDTO;
 
 export interface FetchMarkersDTO{
   id: string;
-  data: MarkersDTO;
+  data: AllMarkersDTO;
 }
-
-export interface ReviewsDTO {
+export interface GenericReviewsDTO {
   username: string,
   date: string,
   time: string,
-  beginnerFriendly: number,
-  advancedFriendly: number,
-  safety: number,
-  busy: number,
   comment: string,
   overallRating: number,
 };
 
+export interface SkateReviewsDTO extends GenericReviewsDTO {
+  beginnerFriendly: number,
+  advancedFriendly: number,
+  safety: number,
+  busy: number,
+};
+
+export type AllReviewsDTO = GenericReviewsDTO | SkateReviewsDTO;
+
 export interface FetchReviewsDTO{
   id: string;
-  data: ReviewsDTO;
+  data: AllReviewsDTO;
 }

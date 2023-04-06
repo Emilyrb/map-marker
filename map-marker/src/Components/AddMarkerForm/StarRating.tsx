@@ -1,13 +1,13 @@
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
-import { ReviewsDTO } from '../../Types';
+import { AllReviewsDTO } from '../../Types';
 
 interface Props {
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
-  formData: ReviewsDTO;
-  setFormData: React.Dispatch<React.SetStateAction<ReviewsDTO>>;
+  formData: AllReviewsDTO;
+  setFormData: React.Dispatch<React.SetStateAction<AllReviewsDTO>>;
   keyId: string;
 }
 

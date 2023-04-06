@@ -37,7 +37,7 @@ interface Props {
 export function SelectMapForm(props: Props) {
   const { setShowMap } = props;
   const { mapName, setMapName } = useContext(MapContext);
-  const [ showErrorPopup, setShowErrorPopup ] = useState(false);
+  // const [ showErrorPopup, setShowErrorPopup ] = useState(false);
 
   const [ formData, setFormData ] = useState({name: ''});
 
@@ -52,15 +52,9 @@ export function SelectMapForm(props: Props) {
     e.preventDefault();
     setMapName(mapNameValue);
     
-    if (mapNameValue !== '') {
-      if (mapNameValue === 'skate') {
-        setShowMap(true);
-        setShowErrorPopup(false);
-      } else {
-        setShowErrorPopup(true);
-      }
-    }
-}
+    setShowMap(true);
+    // setShowErrorPopup(false);
+  }
 
     return (
       <>
@@ -80,9 +74,9 @@ export function SelectMapForm(props: Props) {
             </Button>
           </StyledForm>
         </StyledContainer>
-        {
+        {/* {
           showErrorPopup ? <ToastPopup setShowToast={setShowErrorPopup} headerText={'Error'} bodyText={`${mapName} map does not exist`} /> : null
-        }
+        } */}
       </>
     );
 }

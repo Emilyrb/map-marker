@@ -47,6 +47,32 @@ interface Props{
 
 const initData: FetchMarkersDTO[] = [];
 
+function setGenericData(doc: any){
+  return ({
+    id: doc.id,
+    data: {
+      name: doc.data().name,
+      lat: doc.data().latlng.lat,
+      lng: doc.data().latlng.lng,
+    }
+  });
+}
+// dynamically create this on top of generic data?
+function setSkateData(doc: any){
+  return ({
+    id: doc.id,
+    data: {
+      name: doc.data().name,
+      lat: doc.data().latlng.lat,
+      lng: doc.data().latlng.lng,
+      ramps: doc.data().ramps,
+      dropIns: doc.data().dropIns,
+      pumpTrack: doc.data().pumpTrack,
+      bowl: doc.data().bowl,
+    }
+  });
+}
+
 export function MapComponent(props: Props) {
   const { setShowReviewForm } = props;
   const { mapName } = useContext(MapContext);
@@ -64,18 +90,10 @@ export function MapComponent(props: Props) {
       const markersSnapshot = await getDocs(markersRef);
 
       if (!markersSnapshot.empty) {
-        const markers = markersSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: {
-            name: doc.data().name,
-            lat: doc.data().latlng.lat,
-            lng: doc.data().latlng.lng,
-            ramps: doc.data().ramps,
-            dropIns: doc.data().dropIns,
-            pumpTrack: doc.data().pumpTrack,
-            bowl: doc.data().bowl,
-          }
-        }));
+        const markers = markersSnapshot.docs.map((doc) => (
+          mapName === 'skate' ? setSkateData(doc)
+          : setGenericData(doc)
+        ));
         console.log(`Markers on the ${mapName} map:`, markers);
         setData(markers);                
       } else {

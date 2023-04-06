@@ -54,15 +54,25 @@ interface Props {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const initSkateData = {
+  name: '',
+  image: '',
+  latlng: {lat: 0, lng: 0},
+};
+
+const initGenericData = {
+  name: '',
+  image: '',
+  latlng: {lat: 0, lng: 0},
+};
+
 export function AddMarkerForm(props: Props) {
   const { setShowForm } = props;
-  const [ formData, setFormData ] = useState({
-    id: '',
-    name: '',
-    image: '',
-    latlng: {lat: 0, lng: 0},
-  })
   const { selectedMarkerPos, mapName } = useContext(MapContext);
+  const [ formData, setFormData ] = useState(
+    mapName === 'skate' ? initSkateData
+    : initGenericData
+  )
 
   function handleChange(e: any) {
     const key = e.target.id;
@@ -117,30 +127,10 @@ export function AddMarkerForm(props: Props) {
                 <Form.Control type='text' placeholder='Kuraby' onChange={handleChange} />
             </Form.Group>
           </StyledRow>
-          <StyledRow>
-            <Form.Group as={Col} controlId='ramps'>
-              <Form.Label>Ramps</Form.Label>
-              <Form.Control type='text' placeholder='2' onChange={handleChange}/>
-            </Form.Group>
-            <Form.Group as={Col} controlId='dropIns'>
-              <Form.Label>Drop Ins</Form.Label>
-              <Form.Control type='text' placeholder='3' onChange={handleChange}/>
-            </Form.Group>
-          </StyledRow>
-          <StyledRow>
-            <Form.Group as={Col} controlId='pumpTrack'>
-              <Form.Label>Pump Track</Form.Label>
-              <div>
-                <StyledCheckbox type='checkbox' id='pumpTrack' onChange={handleChange}/>
-              </div>
-            </Form.Group>
-            <Form.Group as={Col} controlId='bowl'>
-              <Form.Label>Bowl</Form.Label>
-              <div>
-                <StyledCheckbox type='checkbox' id='bowl' onChange={handleChange}/>
-              </div>
-            </Form.Group>
-          </StyledRow>
+          {
+            mapName === 'skate' ? renderSkateForm(handleChange)
+            : null
+          }
           <StyledRow>
           <Form.Group controlId="image">
             <Form.Label>Upload Image</Form.Label>
@@ -153,4 +143,35 @@ export function AddMarkerForm(props: Props) {
         </StyledForm>
       </StyledContainer>
     );
+}
+
+function renderSkateForm(handleChange: (e: any) => void){
+  return (
+    <>
+      <StyledRow>
+        <Form.Group as={Col} controlId='ramps'>
+          <Form.Label>Ramps</Form.Label>
+          <Form.Control type='text' placeholder='2' onChange={handleChange}/>
+        </Form.Group>
+        <Form.Group as={Col} controlId='dropIns'>
+          <Form.Label>Drop Ins</Form.Label>
+          <Form.Control type='text' placeholder='3' onChange={handleChange}/>
+        </Form.Group>
+      </StyledRow>
+      <StyledRow>
+        <Form.Group as={Col} controlId='pumpTrack'>
+          <Form.Label>Pump Track</Form.Label>
+          <div>
+            <StyledCheckbox type='checkbox' id='pumpTrack' onChange={handleChange}/>
+          </div>
+        </Form.Group>
+        <Form.Group as={Col} controlId='bowl'>
+          <Form.Label>Bowl</Form.Label>
+          <div>
+            <StyledCheckbox type='checkbox' id='bowl' onChange={handleChange}/>
+          </div>
+        </Form.Group>
+      </StyledRow>
+    </>
+  );
 }
