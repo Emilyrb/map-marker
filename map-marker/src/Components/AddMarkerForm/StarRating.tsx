@@ -6,8 +6,8 @@ import { AllReviewsDTO } from '../../Types';
 interface Props {
   rating: number;
   setRating: React.Dispatch<React.SetStateAction<number>>;
-  formData: AllReviewsDTO;
-  setFormData: React.Dispatch<React.SetStateAction<AllReviewsDTO>>;
+  formData: AllReviewsDTO | {};
+  setFormData: React.Dispatch<React.SetStateAction<AllReviewsDTO | {}>>;
   keyId: string;
 }
 

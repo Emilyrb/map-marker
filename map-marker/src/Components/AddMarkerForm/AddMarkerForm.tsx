@@ -54,25 +54,10 @@ interface Props {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const initSkateData = {
-  name: '',
-  image: '',
-  latlng: {lat: 0, lng: 0},
-};
-
-const initGenericData = {
-  name: '',
-  image: '',
-  latlng: {lat: 0, lng: 0},
-};
-
 export function AddMarkerForm(props: Props) {
   const { setShowForm } = props;
   const { selectedMarkerPos, mapName } = useContext(MapContext);
-  const [ formData, setFormData ] = useState(
-    mapName === 'skate' ? initSkateData
-    : initGenericData
-  )
+  const [ formData, setFormData ] = useState({});
 
   function handleChange(e: any) {
     const key = e.target.id;

@@ -46,33 +46,11 @@ const CloseFormButton = styled.div`
 interface Props{
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const initSkateData = {
-  username: '',
-  date: '',
-  time: '',
-  beginnerFriendly: 0,
-  advancedFriendly: 0,
-  safety: 0,
-  busy: 0,
-  comment: '',
-  overallRating: 0,
-};
-
-const initGenericData = {
-  username: '',
-  date: '',
-  time: '',
-  comment: '',
-  overallRating: 0,
-};
 
 export function AddReviewForm(props: Props) {
   const { setShowForm } = props;
   const { selectedMarkerId, mapName } = useContext(MapContext);
-  const [ formData, setFormData ] = useState(
-    mapName === 'skate' ? initSkateData
-    : initGenericData
-  )
+  const [ formData, setFormData ] = useState({});
   const [ beginnerFriendlyVal, setBeginnerFriendlyVal ] = useState(0);
   const [ advancedFriendlyVal, setAdvancedFriendlyVal ] = useState(0);
   const [ safetyVal, setSafetyVal ] = useState(0);

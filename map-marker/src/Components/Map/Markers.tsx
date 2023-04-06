@@ -93,7 +93,7 @@ export function Markers(props: Props){
     }}
   >
     <Popup>
-      <h2>{data.name} Skate Park</h2>
+      <h2>{data.name} {mapName} Spot</h2>
       {
         mapName === 'skate' ? renderSkateInfo(data)
         : null
