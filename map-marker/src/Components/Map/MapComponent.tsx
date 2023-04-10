@@ -75,7 +75,7 @@ function setSkateData(doc: any){
 
 export function MapComponent(props: Props) {
   const { setShowReviewForm } = props;
-  const { mapName } = useContext(MapContext);
+  const { mapName, refetchMarkers, setRefetchMarkers } = useContext(MapContext);
   const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
   const [ data, setData ] = useState(initData);
 
@@ -115,8 +115,11 @@ export function MapComponent(props: Props) {
   }
 
   useEffect(()=>{
-    fetchMarkers();
-  }, [])
+    if (refetchMarkers){
+      fetchMarkers();
+      setRefetchMarkers(false);
+    }
+  }, [refetchMarkers, setRefetchMarkers])
 
   return (
     <StyledMapContainer center={[-27.469, 153.024]} zoom={13} scrollWheelZoom={false}>

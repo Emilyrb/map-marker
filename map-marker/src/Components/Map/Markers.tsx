@@ -47,41 +47,44 @@ function setSkateData(doc: any){
 
 export function Markers(props: Props){
   const { id, data, setShowReviewForm } = props;
-  const { setSelectedMarkerId, mapName } = useContext(MapContext);
-  console.log('id of marker', data.name, 'is ', id);
+  const { selectedMarkerId, setSelectedMarkerId, mapName, refetchReviews, setRefetchReviews } = useContext(MapContext);
+  // console.log('id of marker', data.name, 'is ', id);
   const [ reviewsData, setReviewsData ] = useState(initData);
   
   async function fetchReviews() {
-    const mapRef = collection(firestore, 'maps3');
-    const mapQuery = query(mapRef, where('mapName', '==', mapName));
-    const mapSnapshot = await getDocs(mapQuery);
+    if (id === selectedMarkerId){
+      const mapRef = collection(firestore, 'maps3');
+      const mapQuery = query(mapRef, where('mapName', '==', mapName));
+      const mapSnapshot = await getDocs(mapQuery);
 
-    if (!mapSnapshot.empty) {
-      const mapDoc = mapSnapshot.docs[0];
-      const reviewsRef = collection(firestore, 'maps3', mapDoc.id ,'markers', id, 'reviews');
-      const reviewsSnapshot = await getDocs(reviewsRef);
+      if (!mapSnapshot.empty) {
+        const mapDoc = mapSnapshot.docs[0];
+        const reviewsRef = collection(firestore, 'maps3', mapDoc.id ,'markers', selectedMarkerId, 'reviews');
+        const reviewsSnapshot = await getDocs(reviewsRef);
 
-      if (!reviewsSnapshot.empty) {
-        const reviews = reviewsSnapshot.docs.map((doc) => (
-          mapName === 'skate' ? setSkateData(doc)
-          : setGenericData(doc)
-        ));
-        console.log(`Reviews on the ${mapName} marker:`, reviews);
-        setReviewsData(reviews);                
-      } else {
-        console.log(`No markers found on the ${mapName} map.`);
+        if (!reviewsSnapshot.empty) {
+          const reviews = reviewsSnapshot.docs.map((doc) => (
+            mapName === 'skate' ? setSkateData(doc)
+            : setGenericData(doc)
+          ));
+          console.log(`Reviews on the ${mapName} marker:`, reviews);
+          setReviewsData(reviews);
+          
+        } else {
+          console.log(`No reviews found on this marker on the ${mapName} map.`);
+        }
+      }  else {
+        console.log(`${data.name} marker has no reviews`);
       }
-    }  else {
-      console.log(`${data.name} marker has no reviews`);
     }
   }
-
-
   useEffect(()=>{
-    fetchReviews();
-    console.log('fetching reviews');
-  }, []);
-
+    if (refetchReviews){
+      fetchReviews();
+      setRefetchReviews(false);
+    }
+  }, [refetchReviews, setRefetchReviews]);
+  
   return (
     <Marker
     position={[data.lat, data.lng]} 
@@ -94,12 +97,12 @@ export function Markers(props: Props){
   >
     <Popup>
       <h2>{data.name} {mapName} Spot</h2>
+      { reviewsData.length > 0 && <ViewReviews data={reviewsData} /> }
       {
         mapName === 'skate' ? renderSkateInfo(data)
         : null
       }
       <AddReviewButton setShowForm={setShowReviewForm}>Add Review:</AddReviewButton>
-      <ViewReviews data={reviewsData} />
     </Popup>
   </Marker>
   );

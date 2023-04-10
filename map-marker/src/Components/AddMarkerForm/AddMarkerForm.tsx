@@ -56,7 +56,7 @@ interface Props {
 
 export function AddMarkerForm(props: Props) {
   const { setShowForm } = props;
-  const { selectedMarkerPos, mapName } = useContext(MapContext);
+  const { newMarkerPos, mapName, setRefetchMarkers } = useContext(MapContext);
   const [ formData, setFormData ] = useState({});
 
   function handleChange(e: any) {
@@ -65,7 +65,7 @@ export function AddMarkerForm(props: Props) {
     setFormData({...formData, [key]: value});
     setFormData(prevState => ({
       ...prevState,
-      'latlng': {lat: selectedMarkerPos['lat'], lng: selectedMarkerPos['lng']},
+      'latlng': {lat: newMarkerPos['lat'], lng: newMarkerPos['lng']},
     }));
   }
 
@@ -81,6 +81,7 @@ export function AddMarkerForm(props: Props) {
       try {
         await addDoc(markersRef, formData);
         console.log(`New marker added to the ${mapName} map`);
+        setRefetchMarkers(true);
       } catch (error) {
         console.error(`Error adding marker to the ${mapName} map`, error);
       }

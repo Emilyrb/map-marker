@@ -49,7 +49,7 @@ interface Props{
 
 export function AddReviewForm(props: Props) {
   const { setShowForm } = props;
-  const { selectedMarkerId, mapName } = useContext(MapContext);
+  const { selectedMarkerId, mapName, setRefetchReviews } = useContext(MapContext);
   const [ formData, setFormData ] = useState({});
   const [ beginnerFriendlyVal, setBeginnerFriendlyVal ] = useState(0);
   const [ advancedFriendlyVal, setAdvancedFriendlyVal ] = useState(0);
@@ -91,6 +91,7 @@ export function AddReviewForm(props: Props) {
 
     console.log('handling submit');
     addReview();
+    setRefetchReviews(true);
   };
 
   function renderSkateForm(){

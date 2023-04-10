@@ -20,14 +20,17 @@ const redIcon = new L.Icon({
 
 export function DraggableMarker(props: Props) {
   const { userLocation } = props;
-  const { setSelectedMarkerPos } = useContext(MapContext);
+  const { setNewMarkerPos } = useContext(MapContext);
   const markerRef = useRef<L.Marker>(null);
   const eventHandlers = useMemo(
     () => ({
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
-          setSelectedMarkerPos(marker.getLatLng());
+          const latlng = marker.getLatLng()
+          const lat = latlng.lat;
+          const lng = latlng.lng;
+          setNewMarkerPos({lat: lat+0.0001, lng: lng+0.0001});
         }
       },
     }),
