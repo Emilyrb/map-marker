@@ -92,6 +92,7 @@ export function Markers(props: Props){
       click: () => {
         console.log('setting marker to', id);
         setSelectedMarkerId(id);
+        setRefetchReviews(true);
       },
     }}
   >

@@ -8,6 +8,7 @@ import { firestore } from '../../firebase_setup/firebase';
 import { Markers } from './Markers';
 import { FetchMarkersDTO } from '../../Types';
 import { MapContext } from '../../MapContext';
+import { fetchMap } from '../../api';
 
 const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
@@ -80,15 +81,9 @@ export function MapComponent(props: Props) {
   const [ data, setData ] = useState(initData);
 
   async function fetchMarkers() {
-    const mapRef = collection(firestore, 'maps3');
-    const mapQuery = query(mapRef, where('mapName', '==', mapName));
-    const mapSnapshot = await getDocs(mapQuery);
-
-    if (!mapSnapshot.empty) {
-      const mapDoc = mapSnapshot.docs[0];
-      const markersRef = collection(firestore, 'maps3', mapDoc.id ,'markers');
-      const markersSnapshot = await getDocs(markersRef);
-
+    const ref = await fetchMap(mapName);
+    if (ref !== null) {
+    const markersSnapshot = await getDocs(ref);
       if (!markersSnapshot.empty) {
         const markers = markersSnapshot.docs.map((doc) => (
           mapName === 'skate' ? setSkateData(doc)
@@ -97,19 +92,7 @@ export function MapComponent(props: Props) {
         console.log(`Markers on the ${mapName} map:`, markers);
         setData(markers);                
       } else {
-        console.log(`No markers found on the ${mapName} map.`, mapSnapshot, mapQuery);
-      }
-    }  else {
-      console.log(`${mapName} map does not exist`);
-      try {
-        const newMapRef = doc(mapRef); // create a new document reference in the "maps" collection
-        const newMapData = {
-          mapName: mapName
-        };
-        await setDoc(newMapRef, newMapData);
-        console.log(`New ${mapName} map created.`);
-      } catch (error) {
-        console.error(`Error creating new ${mapName} map:`, error);
+        console.log(`No markers found on the ${mapName} map`);
       }
     }
   }

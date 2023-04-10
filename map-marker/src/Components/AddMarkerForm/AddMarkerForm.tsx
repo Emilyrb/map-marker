@@ -6,6 +6,7 @@ import { useContext, useState } from 'react';
 import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { MapContext } from '../../MapContext';
+import { fetchMap } from '../../api';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -70,23 +71,13 @@ export function AddMarkerForm(props: Props) {
   }
 
   async function addMarker() {
-    const mapRef = collection(firestore, 'maps3');
-    const mapQuery = query(mapRef, where('mapName', '==', mapName));
-    const mapSnapshot = await getDocs(mapQuery);
-  
-    if (!mapSnapshot.empty) {
-      const mapDoc = mapSnapshot.docs[0];
-      const markersRef = collection(firestore, 'maps3', mapDoc.id, 'markers');
-
-      try {
-        await addDoc(markersRef, formData);
-        console.log(`New marker added to the ${mapName} map`);
-        setRefetchMarkers(true);
-      } catch (error) {
-        console.error(`Error adding marker to the ${mapName} map`, error);
-      }
+    const ref = await fetchMap(mapName);
+    if (ref !== null) {
+      await addDoc(ref, formData);
+      console.log(`New marker added to the ${mapName} map`);
+      setRefetchMarkers(true);
     } else {
-      console.log(`The ${mapName} map does not exist.`);
+      console.log(`Error adding marker to the ${mapName} map`);
     }
   };
 
