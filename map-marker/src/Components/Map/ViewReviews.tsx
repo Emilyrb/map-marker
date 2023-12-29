@@ -97,11 +97,6 @@ function renderSkateReviews(data: SkateReviewsDTO, index: number){
     </>
   )
 }
-      <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
-      <hr />
-    </>
-  )
-}
 
 function renderStarReview(rating: number, label: string) {
   return (
