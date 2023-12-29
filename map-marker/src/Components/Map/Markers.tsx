@@ -1,10 +1,8 @@
-import { Marker, Popup } from "react-leaflet";
-import { AddReviewButton } from "../AddReviewForm/AddReviewButton";
+import { Marker } from "react-leaflet";
 import { getDocs, collection, where, query } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { useContext, useEffect, useState } from "react";
 import { FetchReviewsDTO, AllMarkersDTO } from "../../Types";
-import { ViewReviews } from "./ViewReviews";
 import { MapContext } from "../../MapContext";
 
 interface Props{
@@ -46,8 +44,8 @@ function setSkateData(doc: any){
 }
 
 export function Markers(props: Props){
-  const { id, data, setShowReviewForm } = props;
-  const { selectedMarkerId, setSelectedMarkerId, mapName, refetchReviews, setRefetchReviews } = useContext(MapContext);
+  const { id, data } = props;
+  const { selectedMarkerId, setSelectedMarkerId, mapName, refetchReviews, setRefetchReviews, setShowMarkerPopUp } = useContext(MapContext);
   // console.log('id of marker', data.name, 'is ', id);
   const [ reviewsData, setReviewsData ] = useState(initData);
   
@@ -93,29 +91,10 @@ export function Markers(props: Props){
         console.log('setting marker to', id);
         setSelectedMarkerId(id);
         setRefetchReviews(true);
+        setShowMarkerPopUp({data, reviewsData});
       },
     }}
   >
-    <Popup>
-      <h2>{data.name} {mapName} Spot</h2>
-      { reviewsData.length > 0 && <ViewReviews data={reviewsData} /> }
-      {
-        mapName === 'skate' ? renderSkateInfo(data)
-        : null
-      }
-      <AddReviewButton setShowForm={setShowReviewForm}>Add Review:</AddReviewButton>
-    </Popup>
   </Marker>
-  );
-}
-
-function renderSkateInfo(data: any){
-  return (
-    <>
-      <p>ramps: {data.ramps}</p>
-      <p>drop ins: {data.dropIns}</p>
-      <p>has pump track? {data.pumpTrack === 'on' ? 'Yes' : 'No'}</p>
-      <p>has bowl? {data.bowl === 'on'? 'Yes' : 'No'}</p>
-    </>
   );
 }

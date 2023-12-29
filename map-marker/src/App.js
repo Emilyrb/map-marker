@@ -1,7 +1,8 @@
 import './App.css';
 import { AddMarkerButton, MapComponent, SelectMapForm, AddReviewForm, SidePanel } from './Components';
 import { Container, Navbar, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { MapContext } from './MapContext';
 import styled from 'styled-components';
 
 const ContentContainer = styled(Container)`
@@ -28,6 +29,7 @@ const StyledColMap = styled(StyledCol)`
 function App() {
   const [ showMap, setShowMap ] = useState(false);
   const [ showReviewForm, setShowReviewForm ] = useState(false);
+  const { mapName } = useContext(MapContext);
 
   return (
     <div className='App'>
@@ -40,7 +42,7 @@ function App() {
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <Navbar bg='dark' variant='dark'>
         <Container>
-          <Navbar.Brand href='#home'>Map Marker</Navbar.Brand>
+          <Navbar.Brand href='#home'>{mapName} Map Marker</Navbar.Brand>
           <Navbar.Text>
             {
               showMap ? <AddMarkerButton /> : null 
@@ -56,7 +58,7 @@ function App() {
                 <MapComponent setShowReviewForm={setShowReviewForm} />
               </StyledColMap>
               <StyledCol md={3} xs={12}>
-                <SidePanel />
+                <SidePanel setShowReviewForm={setShowReviewForm} />
               </StyledCol>
             </StyledRow>
             : <SelectMapForm setShowMap={setShowMap} />

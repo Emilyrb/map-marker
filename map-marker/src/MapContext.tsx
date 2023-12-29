@@ -1,4 +1,5 @@
 import { useState, createContext } from 'react';
+import { AllMarkersDTO, FetchReviewsDTO } from './Types';
 
 interface IMapContext {
   mapName: string;
@@ -11,6 +12,8 @@ interface IMapContext {
   setRefetchMarkers: React.Dispatch<React.SetStateAction<boolean>>;
   refetchReviews: boolean;
   setRefetchReviews: React.Dispatch<React.SetStateAction<boolean>>;
+  showMarkerPopUp: {data: AllMarkersDTO, reviewsData: FetchReviewsDTO[]} | null
+  setShowMarkerPopUp: React.Dispatch<React.SetStateAction<{data: AllMarkersDTO, reviewsData: FetchReviewsDTO[]} | null>>;
 }
 
 export const MapContext = createContext<IMapContext>({
@@ -24,6 +27,8 @@ export const MapContext = createContext<IMapContext>({
   setRefetchMarkers: () => {},
   refetchReviews: true,
   setRefetchReviews: () => {},
+  showMarkerPopUp: null,
+  setShowMarkerPopUp: () => {},
 });
 
 
@@ -33,6 +38,7 @@ export const MapProvider = (props: any) => {
   const [selectedMarkerId, setSelectedMarkerId] = useState('');
   const [refetchMarkers, setRefetchMarkers] = useState(true);
   const [refetchReviews, setRefetchReviews] = useState(false);
+  const [showMarkerPopUp, setShowMarkerPopUp] = useState<{data: AllMarkersDTO, reviewsData: FetchReviewsDTO[]} | null>(null);
 
   return (
     <MapContext.Provider 
@@ -46,7 +52,9 @@ export const MapProvider = (props: any) => {
         refetchMarkers,
         setRefetchMarkers,
         refetchReviews,
-        setRefetchReviews
+        setRefetchReviews,
+        showMarkerPopUp,
+        setShowMarkerPopUp
       }}>
       {props.children}
     </MapContext.Provider>
