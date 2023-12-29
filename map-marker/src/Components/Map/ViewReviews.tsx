@@ -85,7 +85,6 @@ function renderSkateReviews(data: SkateReviewsDTO, index: number){
     <>
       { index === 0 && <hr />}
       <ReviewHeader>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewHeader>
-      {/* <ReviewText>{data.safety || '?'} ★ safety | {data.advancedFriendly || '?'} ★ for advanced | {data.beginnerFriendly || '?'} ★ for beginners | {data.busy || '?'} ★ busy-ness</ReviewText> */}
       <StarRatingGroup>
         {renderStarReview(data.safety, 'safety')}
         {renderStarReview(data.advancedFriendly, 'for advanced')}

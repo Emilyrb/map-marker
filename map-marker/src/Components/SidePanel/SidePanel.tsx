@@ -3,13 +3,15 @@ import { useContext } from 'react';
 import styled from 'styled-components';
 import { ViewReviews } from '../Map/ViewReviews';
 import { AddReviewButton } from '../AddReviewForm/AddReviewButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 
 const Container = styled.div`
   width: 100%;
   word-wrap: break-word; 
   overflow-y: auto;
   max-height: 100%;
-  padding: 0 10px;
+  padding: 10px 10px;
 `;
 
 const SubContainer = styled.div`
@@ -71,10 +73,10 @@ export function SidePanel(props: Props) {
 function renderSkateInfo(data: any){
   return (
     <>
-      <DetailsText>ramps: {data.ramps}</DetailsText>
-      <DetailsText>drop ins: {data.dropIns}</DetailsText>
-      <DetailsText>has pump track? {data.pumpTrack === 'on' ? 'Yes' : 'No'}</DetailsText>
-      <DetailsText>has bowl? {data.bowl === 'on'? 'Yes' : 'No'}</DetailsText>
+      <DetailsText>ramps: {data.ramps || 'N/A'}</DetailsText>
+      <DetailsText>drop ins: {data.dropIns || 'N/A'}</DetailsText>
+      <DetailsText>has pump track? {data.pumpTrack === 'on' ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faX} />}</DetailsText>
+      <DetailsText>has bowl? {data.bowl === 'on'? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faX} />}</DetailsText>
     </>
   );
 }
