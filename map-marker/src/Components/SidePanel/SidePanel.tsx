@@ -1,5 +1,5 @@
 import { MapContext } from '../../MapContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ViewReviews } from '../Map/ViewReviews';
 import { AddReviewButton } from '../AddReviewForm/AddReviewButton';
@@ -27,9 +27,10 @@ const DetailsText = styled.p`
   padding: 5px 0;
 `;
 
-const MarkerImage = styled.img`
+const MarkerImage = styled.img<{ loadingImage: boolean }>`
   max-width: 80%;
   max-height: 400px;
+  display: ${(props) => props.loadingImage ? 'none' : 'inline-block'};
 `;
 
 interface Props {
@@ -39,7 +40,8 @@ interface Props {
 export function SidePanel(props: Props) {
   const { setShowReviewForm } = props;
   const { mapName, showMarkerPopUp } = useContext(MapContext);
-
+  const [loadingImage, setLoadingImage] = useState(true);
+  
   return (
     <Container>
       {
@@ -47,7 +49,20 @@ export function SidePanel(props: Props) {
         <>
           <h1>{showMarkerPopUp.data.name} {mapName} spot</h1>
           <SubContainer>
-            {showMarkerPopUp.data.image !== undefined && <><SubHeader>Image</SubHeader><DetailsText><MarkerImage src={showMarkerPopUp.data.image} alt='the spot' /></DetailsText></>}
+            {showMarkerPopUp.data.image !== undefined && 
+              <>
+                <SubHeader>Image</SubHeader>
+                <DetailsText>
+                  {loadingImage && 'Loading image...'}
+                  <MarkerImage
+                    src={showMarkerPopUp.data.image}
+                    alt='the spot'
+                    onLoad={() => setLoadingImage(false)}
+                    loadingImage={loadingImage}
+                  />
+                </DetailsText>
+              </>
+            }
           </SubContainer>
           <SubContainer>
             {mapName === 'skate' && <SubHeader>Details</SubHeader>}
@@ -58,7 +73,7 @@ export function SidePanel(props: Props) {
           </SubContainer>
           { showMarkerPopUp.reviewsData.length > 0 && 
             <SubContainer>
-              <ViewReviews data={showMarkerPopUp.reviewsData} />
+              <ViewReviews data={showMarkerPopUp.reviewsData} setLoadingImage={setLoadingImage} />
             </SubContainer>
           }
           <SubContainer>

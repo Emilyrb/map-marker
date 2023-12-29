@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 interface Props{
   data: FetchReviewsDTO[];
+  setLoadingImage: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ReviewText = styled.p`
@@ -42,13 +43,14 @@ const StarRatingGroup = styled.div`
 `;
 
 export function ViewReviews(props: Props){
-  const { data } = props;
+  const { data, setLoadingImage } = props;
   const { setRefetchReviews, selectedMarkerId, mapName } = useContext(MapContext);
   const [ showReviews, setShowReviews ] = useState(false);
 
   // minimise reviews when swapping markers
   useEffect(() => {
     setShowReviews(false);
+    setLoadingImage(true);
   }, [selectedMarkerId]);
   
   console.log('reviews are', data);
