@@ -8,6 +8,7 @@ import styled from 'styled-components';
 const ContentContainer = styled(Container)`
   max-width: 100% !important;
   height: calc(100dvh - 66px);
+  max-height: calc(100dvh - 66px);
 `;
 
 const StyledCol = styled(Col)`
@@ -17,6 +18,8 @@ const StyledCol = styled(Col)`
 
 const StyledRow = styled(Row)`
   height: 100%;
+  flex-grow: 0;
+  flex: 0;
 `;
 
 const StyledColMap = styled(StyledCol)`

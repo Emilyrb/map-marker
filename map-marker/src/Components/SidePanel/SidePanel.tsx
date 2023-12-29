@@ -7,6 +7,7 @@ import { AddReviewButton } from '../AddReviewForm/AddReviewButton';
 const Container = styled.div`
   width: 100%;
   word-wrap: break-word; 
+  overflow-y: auto;
 `;
 
 const SubContainer = styled.div`
