@@ -1,29 +1,51 @@
 import { useContext, useState } from "react";
-import { FetchReviewsDTO } from "../../Types";
+import { AllReviewsDTO, FetchReviewsDTO } from "../../Types";
 import { MapContext } from "../../MapContext";
+import { Button } from 'react-bootstrap';
+import styled from 'styled-components';
 
 interface Props{
   data: FetchReviewsDTO[];
 }
 
-export function ViewReviews(props: Props){
-    const { data } = props;
-    const { setRefetchReviews } = useContext(MapContext);
-    const [ showReviews, setShowReviews ] = useState(false);
+const ReviewText = styled.p`
+  margin: 0;
+  padding: 0;
+`;
 
-    console.log('reviews are', data);
-    return (
-      <>
-        <a href='#' onClick={() => {
-          setShowReviews(!showReviews);
-          setRefetchReviews(true);
-        }}>View {data.length} reviews</a>
-        {showReviews ?
-          data.map(marker => (
-            <p>{marker.data.overallRating} stars by {marker.data.username}</p>
-          ))
-          : null /* loading screen */
-        }
-      </>
-    );
+const ReviewQuote = styled.p`
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+`;
+
+export function ViewReviews(props: Props){
+  const { data } = props;
+  const { setRefetchReviews } = useContext(MapContext);
+  const [ showReviews, setShowReviews ] = useState(false);
+
+  console.log('reviews are', data);
+  return (
+    <>
+      <Button onClick={() => {
+        setShowReviews(!showReviews);
+        setRefetchReviews(true);
+      }}>View {data.length} reviews</Button>
+      {showReviews ?
+        data.map((marker, index) => (renderReviews(marker.data, index)))
+        : null /* loading screen */
+      }
+    </>
+  );
+}
+
+function renderReviews(data: AllReviewsDTO, index: number){
+  return (
+    <>
+      { index === 0 && <hr />}
+      <ReviewText>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewText>
+      <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
+      <hr />
+    </>
+  )
 }

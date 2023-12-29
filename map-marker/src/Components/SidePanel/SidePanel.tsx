@@ -9,13 +9,26 @@ const Container = styled.div`
   word-wrap: break-word; 
 `;
 
+const SubContainer = styled.div`
+  margin: 20px 0;
+`;
+
+const SubHeader = styled.h4`
+  margin: 0;
+`;
+
+const DetailsText = styled.p`
+  margin: 0;
+  padding: 5px 0;
+`;
+
 interface Props {
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function SidePanel(props: Props) {
   const { setShowReviewForm } = props;
-  const { mapName, selectedMarkerId, showMarkerPopUp } = useContext(MapContext);
+  const { mapName, showMarkerPopUp } = useContext(MapContext);
 
   return (
     <Container>
@@ -23,13 +36,21 @@ export function SidePanel(props: Props) {
         showMarkerPopUp ? 
         <>
           <h1>{showMarkerPopUp.data.name} {mapName} Spot</h1>
-          { showMarkerPopUp.reviewsData.length > 0 && <ViewReviews data={showMarkerPopUp.reviewsData} /> }
-          {
-            mapName === 'skate' ? renderSkateInfo(showMarkerPopUp.data)
-            : mapName === 'sesh' ? renderSeshInfo(showMarkerPopUp.data)
-            : null
+          <SubContainer>
+            <SubHeader>Details</SubHeader>
+            {
+              mapName === 'skate' ? renderSkateInfo(showMarkerPopUp.data)
+              : null
+            }
+          </SubContainer>
+          { showMarkerPopUp.reviewsData.length > 0 && 
+            <SubContainer>
+              <ViewReviews data={showMarkerPopUp.reviewsData} />
+            </SubContainer>
           }
-          <AddReviewButton setShowForm={setShowReviewForm}>Add Review:</AddReviewButton>
+          <SubContainer>
+            <AddReviewButton setShowForm={setShowReviewForm}>Add your review </AddReviewButton>
+          </SubContainer>
         </>
         :
         <h1>No location selected</h1>
@@ -40,10 +61,13 @@ export function SidePanel(props: Props) {
 function renderSkateInfo(data: any){
   return (
     <>
-      <p>ramps: {data.ramps}</p>
-      <p>drop ins: {data.dropIns}</p>
-      <p>has pump track? {data.pumpTrack === 'on' ? 'Yes' : 'No'}</p>
-      <p>has bowl? {data.bowl === 'on'? 'Yes' : 'No'}</p>
+      <DetailsText>ramps: {data.ramps}</DetailsText>
+      <DetailsText>drop ins: {data.dropIns}</DetailsText>
+      <DetailsText>has pump track? {data.pumpTrack === 'on' ? 'Yes' : 'No'}</DetailsText>
+      <DetailsText>has bowl? {data.bowl === 'on'? 'Yes' : 'No'}</DetailsText>
+    </>
+  );
+}
     </>
   );
 }
