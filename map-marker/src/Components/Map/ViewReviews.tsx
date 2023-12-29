@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AllReviewsDTO, FetchReviewsDTO } from "../../Types";
 import { MapContext } from "../../MapContext";
 import { Button } from 'react-bootstrap';
@@ -21,9 +21,14 @@ const ReviewQuote = styled.p`
 
 export function ViewReviews(props: Props){
   const { data } = props;
-  const { setRefetchReviews } = useContext(MapContext);
+  const { setRefetchReviews, selectedMarkerId } = useContext(MapContext);
   const [ showReviews, setShowReviews ] = useState(false);
 
+  // minimise reviews when swapping markers
+  useEffect(() => {
+    setShowReviews(false);
+  }, [selectedMarkerId]);
+  
   console.log('reviews are', data);
   return (
     <>

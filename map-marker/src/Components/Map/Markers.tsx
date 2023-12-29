@@ -2,7 +2,7 @@ import { Marker } from "react-leaflet";
 import { getDocs, collection, where, query } from '@firebase/firestore';
 import { firestore } from '../../firebase_setup/firebase';
 import { useContext, useEffect, useState } from "react";
-import { FetchReviewsDTO, AllMarkersDTO } from "../../Types";
+import { AllMarkersDTO, FetchReviewsDTO } from "../../Types";
 import { MapContext } from "../../MapContext";
 
 interface Props{
@@ -10,8 +10,6 @@ interface Props{
   data: AllMarkersDTO;
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-const initData: FetchReviewsDTO[] = [];
 
 function setGenericData(doc: any){
   return ({
@@ -47,7 +45,6 @@ export function Markers(props: Props){
   const { id, data } = props;
   const { selectedMarkerId, setSelectedMarkerId, mapName, refetchReviews, setRefetchReviews, setShowMarkerPopUp } = useContext(MapContext);
   // console.log('id of marker', data.name, 'is ', id);
-  const [ reviewsData, setReviewsData ] = useState(initData);
   
   async function fetchReviews() {
     if (id === selectedMarkerId){
@@ -61,22 +58,22 @@ export function Markers(props: Props){
         const reviewsSnapshot = await getDocs(reviewsRef);
 
         if (!reviewsSnapshot.empty) {
-          const reviews = reviewsSnapshot.docs.map((doc) => (
+          const reviews: FetchReviewsDTO[] = reviewsSnapshot.docs.map((doc) => (
             mapName === 'skate' ? setSkateData(doc)
             : setGenericData(doc)
           ));
           console.log(`Reviews on the ${mapName} marker:`, reviews);
-          setReviewsData(reviews);
-          
+          setShowMarkerPopUp({data, reviewsData: reviews});
         } else {
           console.log(`No reviews found on this marker on the ${mapName} map.`);
+          setShowMarkerPopUp({data, reviewsData: []});
         }
       }  else {
-        console.log(`${data.name} marker has no reviews`);
+        console.log(`${mapName} map not found`);
       }
     }
   }
-  useEffect(()=>{
+  useEffect(() => {
     if (refetchReviews){
       fetchReviews();
       setRefetchReviews(false);
@@ -91,7 +88,6 @@ export function Markers(props: Props){
         console.log('setting marker to', id);
         setSelectedMarkerId(id);
         setRefetchReviews(true);
-        setShowMarkerPopUp({data, reviewsData});
       },
     }}
   >

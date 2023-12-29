@@ -115,6 +115,7 @@ export function MapComponent(props: Props) {
         data.length > 0 ? 
           data.map(marker => (
               <Markers
+                key={marker.id}
                 id={marker.id}
                 data={marker.data}
                 setShowReviewForm={setShowReviewForm}
