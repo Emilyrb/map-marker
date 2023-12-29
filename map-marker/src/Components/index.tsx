@@ -6,3 +6,5 @@ export * from './Map/ViewReviews';
 export * from './SelectMapForm/SelectMapForm';
 export * from './ToastPopup/ToastPopup';
 export * from './AddReviewForm/AddReviewForm';
+export * from './SidePanel/SidePanel';
+

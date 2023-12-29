@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
 
 const StyledMapContainer = styled(MapContainer)`
   width: 100%;
-  height: calc(100vh - 66px);
+  height: 100%;
 `;
 
 interface loadLocationProps{

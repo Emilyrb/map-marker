@@ -1,7 +1,29 @@
 import './App.css';
-import { AddMarkerButton, MapComponent, SelectMapForm, AddReviewForm } from './Components';
-import { Container, Navbar } from 'react-bootstrap';
+import { AddMarkerButton, MapComponent, SelectMapForm, AddReviewForm, SidePanel } from './Components';
+import { Container, Navbar, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
+import styled from 'styled-components';
+
+const ContentContainer = styled(Container)`
+  max-width: 100% !important;
+  height: calc(100dvh - 66px);
+`;
+
+const StyledCol = styled(Col)`
+  margin: 0 !important;
+  padding: 0 !important;
+`;
+
+const StyledRow = styled(Row)`
+  height: 100%;
+`;
+
+const StyledColMap = styled(StyledCol)`
+  @media (min-width: 768px) {
+    height: 100%;
+  }
+  height: 50%;
+`;
 
 function App() {
   const [ showMap, setShowMap ] = useState(false);
@@ -26,14 +48,23 @@ function App() {
           </Navbar.Text>
         </Container>
       </Navbar>
-      {
-        showMap ?
-          <MapComponent setShowReviewForm={setShowReviewForm} />
-          : <SelectMapForm setShowMap={setShowMap} />
-      }
-      {
-        showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} /> : null
-      }
+      <ContentContainer>
+        {
+          showMap ?
+            <StyledRow>
+              <StyledColMap md={9} xs={12}>
+                <MapComponent setShowReviewForm={setShowReviewForm} />
+              </StyledColMap>
+              <StyledCol md={3} xs={12}>
+                <SidePanel />
+              </StyledCol>
+            </StyledRow>
+            : <SelectMapForm setShowMap={setShowMap} />
+        }
+        {
+          showReviewForm ? <AddReviewForm setShowForm={setShowReviewForm} /> : null
+        }
+      </ContentContainer>
     </div>
   );
 }
