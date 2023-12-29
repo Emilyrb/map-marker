@@ -28,7 +28,8 @@ const DetailsText = styled.p`
 `;
 
 const MarkerImage = styled.img`
-  width: 80%;
+  max-width: 80%;
+  max-height: 400px;
 `;
 
 interface Props {

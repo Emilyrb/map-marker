@@ -1,7 +1,6 @@
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row, InputGroup, DropdownButton, Dropdown, FormControl } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useContext, useState } from 'react';
-import { ToastPopup } from '../';
 import { MapContext } from '../../MapContext';
 
 const StyledContainer = styled(Container)`
@@ -36,7 +35,7 @@ interface Props {
 
 export function SelectMapForm(props: Props) {
   const { setShowMap } = props;
-  const { mapName, setMapName } = useContext(MapContext);
+  const { setMapName } = useContext(MapContext);
   // const [ showErrorPopup, setShowErrorPopup ] = useState(false);
 
   const [ formData, setFormData ] = useState({name: ''});
@@ -56,27 +55,37 @@ export function SelectMapForm(props: Props) {
     // setShowErrorPopup(false);
   }
 
-    return (
-      <>
-        <StyledContainer>
-          <StyledForm onSubmit={handleSubmit} id='selectMapForm'>
-            <StyledRow>
-              <Col><h1>Map name</h1></Col>
-            </StyledRow>
-            <StyledRow>
-              <Form.Group as={Col} controlId='name'>
-                <Form.Label>Which map do you want to view?</Form.Label>
-                <Form.Control type='text' placeholder='Name' onChange={handleChange} />
-              </Form.Group>
-            </StyledRow>
-            <Button variant='primary' type='submit' form='selectMapForm'>
-              Submit
-            </Button>
-          </StyledForm>
-        </StyledContainer>
-        {/* {
-          showErrorPopup ? <ToastPopup setShowToast={setShowErrorPopup} headerText={'Error'} bodyText={`${mapName} map does not exist`} /> : null
-        } */}
-      </>
-    );
+  return (
+    <>
+      <StyledContainer>
+        <StyledForm onSubmit={handleSubmit} id='selectMapForm'>
+          <StyledRow>
+            <Col><h1>Map name</h1></Col>
+          </StyledRow>
+          <StyledRow>
+            <Form.Group as={Col} controlId='name'>
+              <Form.Label>Which map do you want to view?</Form.Label>
+              <InputGroup className="mb-3">
+                <DropdownButton
+                  variant="outline-secondary"
+                  title='Select map'
+                  id="input-group-dropdown-1"
+                >
+                  <Dropdown.Item onClick={() => setFormData({name: 'skate'})}>skate</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setFormData({name: 'name'})}>test</Dropdown.Item>
+                </DropdownButton>
+                <Form.Control value={formData.name} onChange={handleChange} />
+              </InputGroup>
+            </Form.Group>
+          </StyledRow>
+          <Button variant='primary' type='submit' form='selectMapForm'>
+            Submit
+          </Button>
+        </StyledForm>
+      </StyledContainer>
+      {/* {
+        showErrorPopup ? <ToastPopup setShowToast={setShowErrorPopup} headerText={'Error'} bodyText={`${mapName} map does not exist`} /> : null
+      } */}
+    </>
+  );
 }
