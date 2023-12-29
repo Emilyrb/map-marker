@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { AllReviewsDTO, FetchReviewsDTO } from "../../Types";
+import { AllReviewsDTO, FetchReviewsDTO, SkateReviewsDTO } from "../../Types";
 import { MapContext } from "../../MapContext";
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -13,6 +13,12 @@ const ReviewText = styled.p`
   padding: 0;
 `;
 
+const ReviewHeader = styled(ReviewText)`
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+`;
+
 const ReviewQuote = styled.p`
   margin: 0;
   padding: 0;
@@ -21,7 +27,7 @@ const ReviewQuote = styled.p`
 
 export function ViewReviews(props: Props){
   const { data } = props;
-  const { setRefetchReviews, selectedMarkerId } = useContext(MapContext);
+  const { setRefetchReviews, selectedMarkerId, mapName } = useContext(MapContext);
   const [ showReviews, setShowReviews ] = useState(false);
 
   // minimise reviews when swapping markers
@@ -37,7 +43,10 @@ export function ViewReviews(props: Props){
         setRefetchReviews(true);
       }}>View {data.length} reviews</Button>
       {showReviews ?
-        data.map((marker, index) => (renderReviews(marker.data, index)))
+        data.map((marker, index) => (
+          mapName === 'skate' ? renderSkateReviews(marker.data as SkateReviewsDTO, index) : 
+          renderReviews(marker.data, index)
+        ))
         : null /* loading screen */
       }
     </>
@@ -48,7 +57,24 @@ function renderReviews(data: AllReviewsDTO, index: number){
   return (
     <>
       { index === 0 && <hr />}
-      <ReviewText>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewText>
+      <ReviewHeader>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewHeader>
+      <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
+      <hr />
+    </>
+  )
+}
+
+function renderSkateReviews(data: SkateReviewsDTO, index: number){
+  return (
+    <>
+      { index === 0 && <hr />}
+      <ReviewHeader>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewHeader>
+      <ReviewText>{data.safety || '?'} ★ safety | {data.advancedFriendly || '?'} ★ advanced friendly | {data.beginnerFriendly || '?'} ★ beginner friendly | {data.busy || '?'} ★ busy-ness</ReviewText>
+      <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
+      <hr />
+    </>
+  )
+}
       <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
       <hr />
     </>
