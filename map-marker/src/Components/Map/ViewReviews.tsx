@@ -41,7 +41,7 @@ export function ViewReviews(props: Props){
       <Button onClick={() => {
         setShowReviews(!showReviews);
         setRefetchReviews(true);
-      }}>View {data.length} reviews</Button>
+      }}>{showReviews ? 'Hide' : 'View'} {data.length} reviews</Button>
       {showReviews ?
         data.map((marker, index) => (
           mapName === 'skate' ? renderSkateReviews(marker.data as SkateReviewsDTO, index) : 
@@ -69,7 +69,7 @@ function renderSkateReviews(data: SkateReviewsDTO, index: number){
     <>
       { index === 0 && <hr />}
       <ReviewHeader>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewHeader>
-      <ReviewText>{data.safety || '?'} ★ safety | {data.advancedFriendly || '?'} ★ advanced friendly | {data.beginnerFriendly || '?'} ★ beginner friendly | {data.busy || '?'} ★ busy-ness</ReviewText>
+      <ReviewText>{data.safety || '?'} ★ safety | {data.advancedFriendly || '?'} ★ for advanced | {data.beginnerFriendly || '?'} ★ for beginners | {data.busy || '?'} ★ busy-ness</ReviewText>
       <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
       <hr />
     </>

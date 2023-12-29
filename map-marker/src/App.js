@@ -29,6 +29,13 @@ const StyledColMap = styled(StyledCol)`
   height: 50%;
 `;
 
+const StyledColPanel = styled(StyledCol)`
+  @media (min-width: 768px) {
+    max-height: 100%;
+  }
+  max-height: 50%;
+`;
+
 function App() {
   const [ showMap, setShowMap ] = useState(false);
   const [ showReviewForm, setShowReviewForm ] = useState(false);
@@ -60,9 +67,9 @@ function App() {
               <StyledColMap md={9} xs={12}>
                 <MapComponent setShowReviewForm={setShowReviewForm} />
               </StyledColMap>
-              <StyledCol md={3} xs={12}>
+              <StyledColPanel md={3} xs={12}>
                 <SidePanel setShowReviewForm={setShowReviewForm} />
-              </StyledCol>
+              </StyledColPanel>
             </StyledRow>
             : <SelectMapForm setShowMap={setShowMap} />
         }

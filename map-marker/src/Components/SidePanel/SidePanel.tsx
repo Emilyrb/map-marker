@@ -8,6 +8,8 @@ const Container = styled.div`
   width: 100%;
   word-wrap: break-word; 
   overflow-y: auto;
+  max-height: 100%;
+  padding: 0 10px;
 `;
 
 const SubContainer = styled.div`
