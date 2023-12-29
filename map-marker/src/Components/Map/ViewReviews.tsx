@@ -89,7 +89,7 @@ function renderSkateReviews(data: SkateReviewsDTO, index: number){
         {renderStarReview(data.safety, 'safety')}
         {renderStarReview(data.advancedFriendly, 'for advanced')}
         {renderStarReview(data.beginnerFriendly, 'for beginners')}
-        {renderStarReview(data.busy, 'busy-ness')}
+        {renderStarReview(data.busy, 'quietness')}
       </StarRatingGroup>
       <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
       <hr />

@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Row, InputGroup, DropdownButton, Dropdown, FormControl } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row, InputGroup, DropdownButton, Dropdown } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useContext, useState } from 'react';
 import { MapContext } from '../../MapContext';

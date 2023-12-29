@@ -113,7 +113,7 @@ export function AddReviewForm(props: Props) {
             <StarRating rating={safetyVal} setRating={setSafetyVal} formData={formData} setFormData={setFormData} keyId={'safety'} />
           </Form.Group>
           <Form.Group as={Col}controlId='busy'>
-            <Form.Label>Busy</Form.Label>
+            <Form.Label>Quietness</Form.Label>
             <StarRating rating={busyVal} setRating={setBusyVal} formData={formData} setFormData={setFormData} keyId={'busy'} />
           </Form.Group>
         </StyledRow>
