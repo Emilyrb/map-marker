@@ -25,6 +25,22 @@ const ReviewQuote = styled.p`
   font-style: italic;
 `;
 
+const StarRatingBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px;
+  width: 80px;
+  font-size: 12px;
+`;
+
+const StarRatingGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+`;
+
 export function ViewReviews(props: Props){
   const { data } = props;
   const { setRefetchReviews, selectedMarkerId, mapName } = useContext(MapContext);
@@ -69,7 +85,13 @@ function renderSkateReviews(data: SkateReviewsDTO, index: number){
     <>
       { index === 0 && <hr />}
       <ReviewHeader>{data.username || 'anonymous'} on {data.date || 'N/A'} {data.time || ''} voted {data.overallRating || '?'} ★ </ReviewHeader>
-      <ReviewText>{data.safety || '?'} ★ safety | {data.advancedFriendly || '?'} ★ for advanced | {data.beginnerFriendly || '?'} ★ for beginners | {data.busy || '?'} ★ busy-ness</ReviewText>
+      {/* <ReviewText>{data.safety || '?'} ★ safety | {data.advancedFriendly || '?'} ★ for advanced | {data.beginnerFriendly || '?'} ★ for beginners | {data.busy || '?'} ★ busy-ness</ReviewText> */}
+      <StarRatingGroup>
+        {renderStarReview(data.safety, 'safety')}
+        {renderStarReview(data.advancedFriendly, 'for advanced')}
+        {renderStarReview(data.beginnerFriendly, 'for beginners')}
+        {renderStarReview(data.busy, 'busy-ness')}
+      </StarRatingGroup>
       <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
       <hr />
     </>
@@ -78,5 +100,14 @@ function renderSkateReviews(data: SkateReviewsDTO, index: number){
       <ReviewQuote>{data.comment ? `"${data.comment}"` : ''}</ReviewQuote>
       <hr />
     </>
+  )
+}
+
+function renderStarReview(rating: number, label: string) {
+  return (
+    <StarRatingBlock>
+      <div>{rating || '?'} ★</div>
+      <div>{label}</div>
+    </StarRatingBlock>
   )
 }
