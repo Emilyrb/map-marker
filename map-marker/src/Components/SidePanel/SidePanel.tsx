@@ -23,6 +23,10 @@ const DetailsText = styled.p`
   padding: 5px 0;
 `;
 
+const MarkerImage = styled.img`
+  width: 80%;
+`;
+
 interface Props {
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -36,9 +40,12 @@ export function SidePanel(props: Props) {
       {
         showMarkerPopUp ? 
         <>
-          <h1>{showMarkerPopUp.data.name} {mapName} Spot</h1>
+          <h1>{showMarkerPopUp.data.name} {mapName} spot</h1>
           <SubContainer>
-            <SubHeader>Details</SubHeader>
+            {showMarkerPopUp.data.image !== undefined && <><SubHeader>Image</SubHeader><DetailsText><MarkerImage src={showMarkerPopUp.data.image} alt='the spot' /></DetailsText></>}
+          </SubContainer>
+          <SubContainer>
+            {mapName === 'skate' && <SubHeader>Details</SubHeader>}
             {
               mapName === 'skate' ? renderSkateInfo(showMarkerPopUp.data)
               : null

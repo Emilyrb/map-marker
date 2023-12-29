@@ -2,7 +2,7 @@ export interface GenericMarkersDTO {
   lat: number;
   lng: number;
   name: string;
-  // image: string;
+  image: string;
 };
 
 export interface SkateMarkersDTO extends GenericMarkersDTO {

@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useContext, useState } from 'react';
-import { addDoc, collection, query, where, getDocs } from '@firebase/firestore';
-import { firestore } from '../../firebase_setup/firebase';
+import { addDoc } from '@firebase/firestore';
 import { MapContext } from '../../MapContext';
 import { fetchMap } from '../../api';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const StyledContainer = styled(Container)`
   padding: 0;
@@ -59,11 +59,23 @@ export function AddMarkerForm(props: Props) {
   const { setShowForm } = props;
   const { newMarkerPos, mapName, setRefetchMarkers } = useContext(MapContext);
   const [ formData, setFormData ] = useState({});
+  const [uploadingImage, setUploadingImage] = useState(false);
 
-  function handleChange(e: any) {
-    const key = e.target.id;
-    const value = e.target.value;
-    setFormData({...formData, [key]: value});
+  async function handleChange(e: any) {
+    if (e.target.id === 'image') {
+      setUploadingImage(true);
+      const image = e.target.files[0];
+      const storage = getStorage();
+      const storageRef = ref(storage, 'images/' + image.name);
+      await uploadBytes(storageRef, image);
+      const downloadURL = await getDownloadURL(storageRef);
+      setFormData({...formData, image: downloadURL});
+      setUploadingImage(false);
+    } else {
+      const key = e.target.id;
+      const value = e.target.value;
+      setFormData({...formData, [key]: value});
+    }
     setFormData(prevState => ({
       ...prevState,
       'latlng': {lat: newMarkerPos['lat'], lng: newMarkerPos['lng']},
@@ -111,10 +123,10 @@ export function AddMarkerForm(props: Props) {
           <StyledRow>
           <Form.Group controlId="image">
             <Form.Label>Upload Image</Form.Label>
-            <Form.Control type="file" disabled />
+            <Form.Control type="file" onChange={handleChange} />
           </Form.Group>
           </StyledRow>
-          <Button variant="primary" type="submit" form="addMarkerForm">
+          <Button variant="primary" type="submit" form="addMarkerForm" disabled={uploadingImage}>
             Submit
           </Button>
         </StyledForm>

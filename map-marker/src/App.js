@@ -45,7 +45,7 @@ function App() {
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <Navbar bg='dark' variant='dark'>
         <Container>
-          <Navbar.Brand href='javascript: location. reload();'>{mapName} Map Marker</Navbar.Brand>
+          <Navbar.Brand href='.'>{mapName} Map Marker</Navbar.Brand>
           <Navbar.Text>
             {
               showMap ? <AddMarkerButton /> : null 

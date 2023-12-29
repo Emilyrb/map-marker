@@ -20,6 +20,7 @@ function setGenericData(doc: any){
       time: doc.data().time,
       comment: doc.data().comment,
       overallRating: doc.data().overallRating,
+      image: doc.data().image,
     }
   });
 }
@@ -37,6 +38,7 @@ function setSkateData(doc: any){
       busy: doc.data().busy,
       comment: doc.data().comment,
       overallRating: doc.data().overallRating,
+      image: doc.data().image,
     }
   });
 }

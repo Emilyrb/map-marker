@@ -55,6 +55,7 @@ function setGenericData(doc: any){
       name: doc.data().name,
       lat: doc.data().latlng.lat,
       lng: doc.data().latlng.lng,
+      image: doc.data().image,
     }
   });
 }
@@ -70,6 +71,7 @@ function setSkateData(doc: any){
       dropIns: doc.data().dropIns,
       pumpTrack: doc.data().pumpTrack,
       bowl: doc.data().bowl,
+      image: doc.data().image,
     }
   });
 }
