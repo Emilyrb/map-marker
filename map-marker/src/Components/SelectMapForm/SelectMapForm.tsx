@@ -72,7 +72,7 @@ export function SelectMapForm(props: Props) {
                   id="input-group-dropdown-1"
                 >
                   <Dropdown.Item onClick={() => setFormData({name: 'skate'})}>skate</Dropdown.Item>
-                  <Dropdown.Item onClick={() => setFormData({name: 'name'})}>test</Dropdown.Item>
+                  <Dropdown.Item onClick={() => setFormData({name: 'test'})}>test</Dropdown.Item>
                 </DropdownButton>
                 <Form.Control value={formData.name} onChange={handleChange} />
               </InputGroup>
