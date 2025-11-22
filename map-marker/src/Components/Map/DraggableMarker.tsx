@@ -3,10 +3,6 @@ import { useContext, useMemo, useRef } from 'react';
 import L from 'leaflet';
 import { MapContext } from '../../MapContext';
 
-interface Props{
-  userLocation: {lat: number, lng: number};
-};
-
 const redIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
@@ -18,9 +14,8 @@ const redIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-export function DraggableMarker(props: Props) {
-  const { userLocation } = props;
-  const { setNewMarkerPos } = useContext(MapContext);
+export function DraggableMarker() {
+  const { newMarkerPos, setNewMarkerPos } = useContext(MapContext);
   const markerRef = useRef<L.Marker>(null);
   const eventHandlers = useMemo(
     () => ({
@@ -41,7 +36,7 @@ export function DraggableMarker(props: Props) {
     <Marker
       draggable={true}
       eventHandlers={eventHandlers}
-      position={userLocation}
+      position={newMarkerPos}
       ref={markerRef}
       icon={redIcon}
     />

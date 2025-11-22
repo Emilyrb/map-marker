@@ -37,8 +37,8 @@ const StyledColPanel = styled(StyledCol)`
 `;
 
 function App() {
-  const [ showMap, setShowMap ] = useState(false);
-  const [ showReviewForm, setShowReviewForm ] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
   const { mapName } = useContext(MapContext);
 
   return (
@@ -55,7 +55,7 @@ function App() {
           <Navbar.Brand href='.'>{mapName} Map Marker</Navbar.Brand>
           <Navbar.Text>
             {
-              showMap ? <AddMarkerButton /> : null 
+              showMap ? <AddMarkerButton /> : null
             }
           </Navbar.Text>
         </Container>

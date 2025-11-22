@@ -1,14 +1,14 @@
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import styled from 'styled-components';
 import { useContext, useEffect, useState } from 'react';
-import { DraggableMarker } from './DraggableMarker';
-import { getDocs, collection, query, where, setDoc, doc } from '@firebase/firestore';
-import { firestore } from '../../firebase_setup/firebase';
-import { Markers } from './Markers';
+import { getDocs } from '@firebase/firestore';
+// import { getDocs, collection, query, where, setDoc, doc } from '@firebase/firestore';
+// import { firestore } from '../../firebase_setup/firebase';
 import { FetchMarkersDTO } from '../../Types';
 import { MapContext } from '../../MapContext';
 import { fetchMap } from '../../api';
+import { RenderMapMarkers } from './RenderMapMarkers';
 
 const L = require('leaflet');
 delete L.Icon.Default.prototype._getIconUrl;
@@ -22,25 +22,6 @@ const StyledMapContainer = styled(MapContainer)`
   width: 100%;
   height: 100%;
 `;
-
-interface loadLocationProps{
-  userLocation: {lat: number, lng: number};
-  setUserLocation: React.Dispatch<React.SetStateAction<{lat: number, lng: number}>>;
-}
-
-function LoadToUserLocation(props: loadLocationProps) {
-  const { userLocation, setUserLocation } = props;
-  const map = useMap();
-  if (userLocation.lat === 0 && userLocation.lng === 0){
-    map.locate().on('locationfound', function (e: any) {
-      setUserLocation(e.latlng);
-      map.flyTo(e.latlng, map.getZoom());
-    });
-    map.on('locationerror', () => alert('user denied access to location'));
-
-  }
-  return null;
-}
 
 interface Props{
   setShowReviewForm: React.Dispatch<React.SetStateAction<boolean>>;
@@ -79,7 +60,6 @@ function setSkateData(doc: any){
 export function MapComponent(props: Props) {
   const { setShowReviewForm } = props;
   const { mapName, refetchMarkers, setRefetchMarkers } = useContext(MapContext);
-  const [ userLocation, setUserLocation ] = useState({lat: 0, lng: 0});
   const [ data, setData ] = useState(initData);
 
   async function fetchMarkers() {
@@ -107,24 +87,8 @@ export function MapComponent(props: Props) {
   }, [refetchMarkers, setRefetchMarkers])
 
   return (
-    <StyledMapContainer center={[-27.469, 153.024]} zoom={13} scrollWheelZoom={false}>
-      <LoadToUserLocation userLocation={userLocation} setUserLocation={setUserLocation}/>
-      {
-        userLocation.lat !== 0 && userLocation.lng !== 0 &&
-        <DraggableMarker userLocation={userLocation} />
-      }
-      {
-        data.length > 0 ? 
-          data.map(marker => (
-              <Markers
-                key={marker.id}
-                id={marker.id}
-                data={marker.data}
-                setShowReviewForm={setShowReviewForm}
-              />
-          ))
-          : null /* loading screen */
-      }
+    <StyledMapContainer center={[-27.469, 153.024]} zoom={13} scrollWheelZoom={false} >
+      <RenderMapMarkers data={data} setShowReviewForm={setShowReviewForm} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
