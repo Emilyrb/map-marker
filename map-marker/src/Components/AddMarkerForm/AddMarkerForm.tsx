@@ -64,22 +64,33 @@ export function AddMarkerForm(props: Props) {
   async function handleChange(e: any) {
     if (e.target.id === 'image') {
       setUploadingImage(true);
-      const image = e.target.files[0];
+      const image = e.target.files && e.target.files[0];
+      if (!image) {
+        setUploadingImage(false);
+        return;
+      }
       const storage = getStorage();
-      const storageRef = ref(storage, 'images/' + image.name);
+      // Use a strongly unique file name so different markers never overwrite each other's images
+      const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      const imageName = `${uniqueSuffix}-${image.name || 'image'}`;
+      const storageRef = ref(storage, 'images/' + imageName);
       await uploadBytes(storageRef, image);
       const downloadURL = await getDownloadURL(storageRef);
-      setFormData({...formData, image: downloadURL});
+      setFormData(prevState => ({
+        ...prevState,
+        image: downloadURL,
+        latlng: { lat: newMarkerPos['lat'], lng: newMarkerPos['lng'] },
+      }));
       setUploadingImage(false);
     } else {
       const key = e.target.id;
       const value = e.target.value;
-      setFormData({...formData, [key]: value});
+      setFormData(prevState => ({
+        ...prevState,
+        [key]: value,
+        latlng: { lat: newMarkerPos['lat'], lng: newMarkerPos['lng'] },
+      }));
     }
-    setFormData(prevState => ({
-      ...prevState,
-      'latlng': {lat: newMarkerPos['lat'], lng: newMarkerPos['lng']},
-    }));
   }
 
   async function addMarker() {
